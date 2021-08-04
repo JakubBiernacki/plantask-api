@@ -1,7 +1,15 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
+import { TaskType } from '../enums/type.enum';
+import { TaskLevel } from '../enums/level.enum';
 
 @InputType()
 export class CreateTaskInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field(() => TaskType)
+  type: TaskType;
+
+  @Field(() => TaskLevel)
+  level: TaskLevel;
+
+  @Field()
+  description: string;
 }

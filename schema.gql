@@ -1,0 +1,47 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Task {
+  id: ID!
+  type: TaskType!
+  level: TaskLevel!
+  description: String!
+}
+
+enum TaskType {
+  ISSUE
+  TASK
+  GOALS
+}
+
+enum TaskLevel {
+  LOW
+  NORMAL
+  IMPORTANT
+  VARY_IMPORTANT
+}
+
+type Query {
+  tasks: [Task!]!
+  task(id: String!): Task!
+}
+
+type Mutation {
+  createTask(createTaskInput: CreateTaskInput!): Task!
+  updateTask(updateTaskInput: UpdateTaskInput!): Task!
+  removeTask(id: String!): Task!
+}
+
+input CreateTaskInput {
+  type: TaskType!
+  level: TaskLevel!
+  description: String!
+}
+
+input UpdateTaskInput {
+  type: TaskType
+  level: TaskLevel
+  description: String
+  id: ID!
+}

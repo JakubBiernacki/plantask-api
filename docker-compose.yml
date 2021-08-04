@@ -5,8 +5,7 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: login
-      MONGO_INITDB_ROOT_PASSWORD: password
+      MongoDB_DATABASE: plantask
   rabbitmq:
     image: rabbitmq:management
     ports:

@@ -7,12 +7,11 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MongooseConfig implements MongooseOptionsFactory {
-  constructor(private configService: ConfigService) {
-    console.log(configService.get('db'));
-  }
+  constructor(private configService: ConfigService) {}
   createMongooseOptions(): MongooseModuleOptions {
     return {
-      uri: 'mongodb://localhost/nest',
+      uri: this.configService.get('DB_URL'),
+      useFindAndModify: false,
     };
   }
 }
