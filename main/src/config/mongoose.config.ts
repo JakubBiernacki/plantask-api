@@ -12,6 +12,7 @@ export class MongooseConfig implements MongooseOptionsFactory {
     return {
       uri: this.configService.get('DB_URL'),
       useFindAndModify: false,
+      connectionName: 'main',
     };
   }
 }

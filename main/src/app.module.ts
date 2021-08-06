@@ -5,6 +5,7 @@ import { MongooseConfig } from './config/mongoose.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { GqlConfig } from './config/graphql.config';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { GqlConfig } from './config/graphql.config';
       useClass: MongooseConfig,
     }),
     TasksModule,
+    ProjectsModule,
   ],
   controllers: [],
   providers: [],

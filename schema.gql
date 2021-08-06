@@ -2,11 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Project {
+  id: ID!
+  name: String!
+}
+
 type Task {
   id: ID!
   type: TaskType!
   level: TaskLevel!
   description: String!
+  created_at: Date!
+  project: Project!
 }
 
 enum TaskType {
@@ -22,15 +29,23 @@ enum TaskLevel {
   VARY_IMPORTANT
 }
 
+"""Date custom scalar type"""
+scalar Date
+
 type Query {
   tasks: [Task!]!
   task(id: String!): Task!
+  projects: [Project!]!
+  project(id: Int!): Project!
 }
 
 type Mutation {
   createTask(createTaskInput: CreateTaskInput!): Task!
   updateTask(updateTaskInput: UpdateTaskInput!): Task!
   removeTask(id: String!): Task!
+  createProject(createProjectInput: CreateProjectInput!): Project!
+  updateProject(updateProjectInput: UpdateProjectInput!): Project!
+  removeProject(id: Int!): Project!
 }
 
 input CreateTaskInput {
@@ -44,4 +59,13 @@ input UpdateTaskInput {
   level: TaskLevel
   description: String
   id: ID!
+}
+
+input CreateProjectInput {
+  name: String!
+}
+
+input UpdateProjectInput {
+  name: String
+  id: Int!
 }
