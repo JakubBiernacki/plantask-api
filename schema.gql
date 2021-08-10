@@ -14,7 +14,7 @@ type Task {
   level: TaskLevel!
   description: String!
   created_at: Date!
-  project: Project!
+  project: Project
 }
 
 enum TaskType {
@@ -37,7 +37,7 @@ type Query {
   tasks: [Task!]!
   task(id: String!): Task!
   projects: [Project!]!
-  project(id: Int!): Project!
+  project(id: ID!): Project!
 }
 
 type Mutation {
@@ -46,14 +46,14 @@ type Mutation {
   removeTask(id: String!): Task!
   createProject(createProjectInput: CreateProjectInput!): Project!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
-  removeProject(id: Int!): Project!
+  removeProject(id: ID!): Project!
 }
 
 input CreateTaskInput {
   type: TaskType!
   level: TaskLevel!
   description: String!
-  projectId: ID!
+  projectId: ID
 }
 
 input UpdateTaskInput {

@@ -14,6 +14,6 @@ export class CreateTaskInput {
   @Field()
   description: string;
 
-  @Field(() => ID)
-  projectId: ObjectId;
+  @Field(() => ID, { nullable: true })
+  projectId?: ObjectId;
 }

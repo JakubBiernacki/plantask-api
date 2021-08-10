@@ -3,9 +3,9 @@ import {
   Query,
   Mutation,
   Args,
-  Int,
   ResolveField,
   Parent,
+  ID,
 } from '@nestjs/graphql';
 import { ProjectsService } from './projects.service';
 import { Project } from './entities/project.entity';
@@ -30,7 +30,7 @@ export class ProjectsResolver {
   }
 
   @Query(() => Project, { name: 'project' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => ID }) id: string) {
     return this.projectsService.findOne(id);
   }
 
@@ -45,7 +45,7 @@ export class ProjectsResolver {
   }
 
   @Mutation(() => Project)
-  removeProject(@Args('id', { type: () => Int }) id: number) {
+  removeProject(@Args('id', { type: () => ID }) id: string) {
     return this.projectsService.remove(id);
   }
 

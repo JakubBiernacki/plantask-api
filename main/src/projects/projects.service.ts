@@ -33,8 +33,10 @@ export class ProjectsService {
     });
   }
 
-  remove(id) {
-    return `This action removes a #${id} project`;
+  async remove(id) {
+    const project = await this.findOne(id);
+    this.tasksService.findByProject(project).deleteMany();
+    return project.remove();
   }
 
   getTasksByProjectId(project: Project) {

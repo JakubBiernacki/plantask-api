@@ -47,7 +47,7 @@ export class TasksResolver {
     return this.tasksService.remove(id);
   }
 
-  @ResolveField('project', () => Project)
+  @ResolveField('project', () => Project, { nullable: true })
   getProject(@Parent() task: Task) {
     const { id } = task;
     return this.tasksService.getProjectByTaskId(id);

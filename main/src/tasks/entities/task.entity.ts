@@ -27,8 +27,8 @@ export class Task extends BaseEntity {
   created_at: Date;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Project' })
-  @Field(() => Project)
-  project: Project;
+  @Field(() => Project, { nullable: true })
+  project?: Project;
 }
 export type TaskDocument = Task & Document;
 export const TaskSchema = SchemaFactory.createForClass(Task);
