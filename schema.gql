@@ -5,6 +5,7 @@
 type Project {
   id: ID!
   name: String!
+  tasks: [Task!]!
 }
 
 type Task {
@@ -52,6 +53,7 @@ input CreateTaskInput {
   type: TaskType!
   level: TaskLevel!
   description: String!
+  projectId: ID!
 }
 
 input UpdateTaskInput {

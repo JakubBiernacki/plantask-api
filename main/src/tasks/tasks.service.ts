@@ -4,6 +4,7 @@ import { UpdateTaskInput } from './dto/update-task.input';
 import { InjectModel } from '@nestjs/mongoose';
 import { Task, TaskDocument } from './entities/task.entity';
 import { Model } from 'mongoose';
+import { Project } from '../projects/entities/project.entity';
 
 @Injectable()
 export class TasksService {
@@ -11,8 +12,8 @@ export class TasksService {
     @InjectModel(Task.name) private readonly taskModel: Model<TaskDocument>,
   ) {}
 
-  create(createTaskInput: CreateTaskInput) {
-    return this.taskModel.create(createTaskInput);
+  async create(project: Project, createTaskInput: CreateTaskInput) {
+    return this.taskModel.create({ project, ...createTaskInput });
   }
 
   findAll() {
@@ -20,7 +21,7 @@ export class TasksService {
   }
 
   findOne(id) {
-    return this.taskModel.findOne({ _id: id });
+    return this.taskModel.findById(id);
   }
 
   update(id, updateTaskInput: UpdateTaskInput) {
@@ -29,5 +30,12 @@ export class TasksService {
 
   remove(id) {
     return this.taskModel.findByIdAndRemove(id);
+  }
+
+  async getProjectByTaskId(id) {
+    return (await this.findOne(id).populate('project')).project;
+  }
+  findByProject(project: Project) {
+    return this.taskModel.find({ project });
   }
 }

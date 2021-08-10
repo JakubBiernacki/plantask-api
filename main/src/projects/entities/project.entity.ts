@@ -9,10 +9,6 @@ export class Project extends BaseEntity {
   @Prop()
   @Field()
   name: string;
-
-  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Tasks' })
-  // @Field(() => [Task])
-  // tasks: Task[];
 }
 
 export type ProjectDocument = Project & Document;

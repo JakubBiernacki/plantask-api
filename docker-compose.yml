@@ -6,10 +6,3 @@ services:
       - "27017:27017"
     environment:
       MongoDB_DATABASE: plantask
-  rabbitmq:
-    image: rabbitmq:management
-    ports:
-      - "5670-5670"
-      - "15672:15672"
-    depends_on:
-      - mongo_db

@@ -5,12 +5,14 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
 import { Project, ProjectDocument } from './entities/project.entity';
+import { TasksService } from '../tasks/tasks.service';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name)
     private readonly projectModel: Model<ProjectDocument>,
+    private readonly tasksService: TasksService,
   ) {}
 
   create(createProjectInput: CreateProjectInput) {
@@ -21,15 +23,21 @@ export class ProjectsService {
     return this.projectModel.find();
   }
 
-  findOne(id: number) {
-    return this.projectModel.findOne({ _id: id });
+  findOne(id) {
+    return this.projectModel.findById(id);
   }
 
-  update(id: number, updateProjectInput: UpdateProjectInput) {
-    return `This action updates a #${id} project`;
+  update(id, updateProjectInput: UpdateProjectInput) {
+    return this.projectModel.findByIdAndUpdate(id, updateProjectInput, {
+      new: true,
+    });
   }
 
-  remove(id: number) {
+  remove(id) {
     return `This action removes a #${id} project`;
+  }
+
+  getTasksByProjectId(project: Project) {
+    return this.tasksService.findByProject(project);
   }
 }

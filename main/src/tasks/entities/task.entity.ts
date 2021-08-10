@@ -22,13 +22,11 @@ export class Task extends BaseEntity {
   @Field()
   description: string;
 
-  // created_by: User
-
   @Prop({ type: Date, default: Date.now })
   @Field()
   created_at: Date;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }] })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Project' })
   @Field(() => Project)
   project: Project;
 }
