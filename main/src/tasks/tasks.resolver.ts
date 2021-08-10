@@ -5,6 +5,7 @@ import {
   Args,
   ResolveField,
   Parent,
+  ID,
 } from '@nestjs/graphql';
 import { TasksService } from './tasks.service';
 import { Task } from './entities/task.entity';
@@ -12,6 +13,7 @@ import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
+import { PaginationArgs } from '../common/dto/pagination.args';
 
 @Resolver(() => Task)
 export class TasksResolver {
@@ -28,12 +30,13 @@ export class TasksResolver {
   }
 
   @Query(() => [Task], { name: 'tasks' })
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(@Args() pagination: PaginationArgs) {
+    const { limit, offset } = pagination;
+    return this.tasksService.findAll().limit(limit).skip(offset);
   }
 
   @Query(() => Task, { name: 'task' })
-  findOne(@Args('id') id: string) {
+  findOne(@Args('id', { type: () => ID }) id: string) {
     return this.tasksService.findOne(id);
   }
 
@@ -43,7 +46,7 @@ export class TasksResolver {
   }
 
   @Mutation(() => Task)
-  removeTask(@Args('id') id: string) {
+  removeTask(@Args('id', { type: () => ID }) id: string) {
     return this.tasksService.remove(id);
   }
 

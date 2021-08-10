@@ -5,7 +5,7 @@
 type Project {
   id: ID!
   name: String!
-  tasks: [Task!]!
+  tasks(offset: Int = 0, limit: Int = 10): [Task!]!
 }
 
 type Task {
@@ -34,16 +34,16 @@ enum TaskLevel {
 scalar Date
 
 type Query {
-  tasks: [Task!]!
-  task(id: String!): Task!
-  projects: [Project!]!
+  tasks(offset: Int = 0, limit: Int = 10): [Task!]!
+  task(id: ID!): Task!
+  projects(offset: Int = 0, limit: Int = 10): [Project!]!
   project(id: ID!): Project!
 }
 
 type Mutation {
   createTask(createTaskInput: CreateTaskInput!): Task!
   updateTask(updateTaskInput: UpdateTaskInput!): Task!
-  removeTask(id: String!): Task!
+  removeTask(id: ID!): Task!
   createProject(createProjectInput: CreateProjectInput!): Project!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   removeProject(id: ID!): Project!
