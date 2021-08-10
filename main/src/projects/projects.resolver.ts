@@ -5,7 +5,6 @@ import {
   Args,
   ResolveField,
   Parent,
-  ID,
 } from '@nestjs/graphql';
 import { ProjectsService } from './projects.service';
 import { Project } from './entities/project.entity';
@@ -13,6 +12,7 @@ import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Task } from '../tasks/entities/task.entity';
 import { PaginationArgs } from '../common/dto/pagination.args';
+import { GetIdArgs } from '../common/dto/getId.args';
 
 @Resolver(() => Project)
 export class ProjectsResolver {
@@ -31,7 +31,7 @@ export class ProjectsResolver {
     return this.projectsService.findAll().limit(limit).skip(offset);
   }
   @Query(() => Project, { name: 'project' })
-  findOne(@Args('id', { type: () => ID }) id: string) {
+  findOne(@Args() { id }: GetIdArgs) {
     return this.projectsService.findOne(id);
   }
 
@@ -46,7 +46,7 @@ export class ProjectsResolver {
   }
 
   @Mutation(() => Project)
-  removeProject(@Args('id', { type: () => ID }) id: string) {
+  removeProject(@Args() { id }: GetIdArgs) {
     return this.projectsService.remove(id);
   }
 
