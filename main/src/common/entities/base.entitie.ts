@@ -1,4 +1,4 @@
-import { Schema } from '@nestjs/mongoose';
+import { Prop, Schema } from '@nestjs/mongoose';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import * as mongoose from 'mongoose';
 
@@ -7,4 +7,8 @@ import * as mongoose from 'mongoose';
 export abstract class BaseEntity {
   @Field(() => ID)
   id: mongoose.Schema.Types.ObjectId;
+
+  @Prop({ type: Date, default: Date.now })
+  @Field()
+  created_at: Date;
 }

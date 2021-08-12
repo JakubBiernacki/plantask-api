@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { GqlConfig } from './config/graphql.config';
 import { ProjectsModule } from './projects/projects.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { ProjectsModule } from './projects/projects.module';
     }),
     TasksModule,
     ProjectsModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

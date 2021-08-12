@@ -4,16 +4,20 @@
 
 type Project {
   id: ID!
+  created_at: Date!
   name: String!
   tasks(offset: Int = 0, limit: Int = 10): [Task!]!
 }
 
+"""Date custom scalar type"""
+scalar Date
+
 type Task {
   id: ID!
+  created_at: Date!
   type: TaskType!
   level: TaskLevel!
   description: String!
-  created_at: Date!
   project: Project
 }
 
@@ -29,9 +33,6 @@ enum TaskLevel {
   IMPORTANT
   VARY_IMPORTANT
 }
-
-"""Date custom scalar type"""
-scalar Date
 
 type Query {
   tasks(offset: Int = 0, limit: Int = 10): [Task!]!
