@@ -18,6 +18,10 @@ export class UsersService {
     private authService: AuthService,
   ) {}
 
+  login(user) {
+    return this.authService.login(user);
+  }
+
   findByUsername(username: string) {
     return this.userModel.findOne({ username });
   }
