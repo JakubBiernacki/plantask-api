@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
+import { CreateUserInput } from './create-user.input';
 import { OmitType } from '@nestjs/graphql';
 
-export class UpdateUserDto extends PartialType(
-  OmitType(CreateUserDto, ['username'] as const),
+export class UpdateUserInput extends PartialType(
+  OmitType(CreateUserInput, ['username'] as const),
 ) {}

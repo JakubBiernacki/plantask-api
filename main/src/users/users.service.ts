@@ -8,7 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserInput } from './dto/create-user.input';
 
 @Injectable()
 export class UsersService {
@@ -22,6 +22,10 @@ export class UsersService {
     return this.authService.login(user);
   }
 
+  findById(id) {
+    return this.userModel.findById(id);
+  }
+
   findByUsername(username: string) {
     return this.userModel.findOne({ username });
   }
@@ -30,16 +34,21 @@ export class UsersService {
     return this.findByUsername(username).select('+password');
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserInput) {
     await this.isUserUnique(createUserDto);
     const hashPass = await this.authService.hashPassword(
       createUserDto.password,
     );
 
-    await this.userModel.create({ ...createUserDto, password: hashPass });
+    const user = await this.userModel.create({
+      ...createUserDto,
+      password: hashPass,
+    });
+    delete user.password;
+    return user;
   }
 
-  async isUserUnique({ username, email }: CreateUserDto) {
+  async isUserUnique({ username, email }: CreateUserInput) {
     const usernameExist = await this.userModel.exists({ username });
     const emailExist = await this.userModel.exists({ email });
 

@@ -34,11 +34,29 @@ enum TaskLevel {
   VARY_IMPORTANT
 }
 
+type User {
+  id: ID!
+  created_at: Date!
+  username: String!
+  email: String!
+}
+
+type LoginResult {
+  access_token: String!
+}
+
 type Query {
   tasks(offset: Int = 0, limit: Int = 10): [Task!]!
   task(id: ID!): Task!
   projects(offset: Int = 0, limit: Int = 10): [Project!]!
   project(id: ID!): Project!
+  login(loginInput: LoginInput!): LoginResult!
+  me: User!
+}
+
+input LoginInput {
+  username: String!
+  password: String!
 }
 
 type Mutation {
@@ -48,6 +66,7 @@ type Mutation {
   createProject(createProjectInput: CreateProjectInput!): Project!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   removeProject(id: ID!): Project!
+  createUser(createUserInput: CreateUserInput!): User!
 }
 
 input CreateTaskInput {
@@ -71,4 +90,10 @@ input CreateProjectInput {
 input UpdateProjectInput {
   name: String
   id: Int!
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
 }

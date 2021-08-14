@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { LoginInput } from './dto/login.input';
 
 const saltOrRounds = 12;
 
@@ -13,12 +14,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
+  async validateUser({ username, password }: LoginInput): Promise<any> {
     const user = await this.usersService.findByUsernameWithPassword(username);
 
-    if (user && (await this.comparePasswords(pass, user.password))) {
+    if (user && (await this.comparePasswords(password, user.password))) {
       delete user['_doc'].password;
-      return user;
+      return this.login(user);
     }
     return null;
   }
