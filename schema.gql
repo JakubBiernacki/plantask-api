@@ -39,6 +39,14 @@ type User {
   created_at: Date!
   username: String!
   email: String!
+  accountType: AccountType!
+  role: String!
+}
+
+enum AccountType {
+  Normal
+  Employee
+  Organizer
 }
 
 type LoginResult {
