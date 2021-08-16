@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseEntity } from '../../common/entities/base.entitie';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { BaseEntity } from '../../common/entities/base.entitie';
 
 @Schema()
 @ObjectType()

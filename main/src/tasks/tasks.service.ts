@@ -18,9 +18,6 @@ export class TasksService extends BaseService<Task> {
     return this.taskModel.create(createTaskInput);
   }
 
-  async getProjectByTaskId(id) {
-    return (await (await this.findOne(id)).populate('project')).project;
-  }
   findByProject(project: Project) {
     return this.taskModel.find({ project });
   }

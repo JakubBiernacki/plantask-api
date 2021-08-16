@@ -1,12 +1,9 @@
 import { Document, Model } from 'mongoose';
-import { BaseEntity } from '../entities/base.entitie';
 import { IBaseService } from '../interfaces/baseService.interface';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export abstract class BaseService<T extends BaseEntity>
-  implements IBaseService
-{
+export abstract class BaseService<T> implements IBaseService {
   protected constructor(private readonly genericModel: Model<T & Document>) {}
 
   async findAll({ limit, offset }) {

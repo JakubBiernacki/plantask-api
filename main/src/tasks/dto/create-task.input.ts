@@ -4,6 +4,7 @@ import { TaskLevel } from '../enums/level.enum';
 import { ObjectId } from 'mongoose';
 import { MinLength } from 'class-validator';
 import { Project } from '../../projects/entities/project.entity';
+import { User } from '../../users/entities/user.entity';
 
 @InputType()
 export class CreateTaskInput {
@@ -19,6 +20,8 @@ export class CreateTaskInput {
 
   @Field(() => ID, { nullable: true })
   projectId?: ObjectId;
+
+  created_by: User;
 
   project?: Project;
 }

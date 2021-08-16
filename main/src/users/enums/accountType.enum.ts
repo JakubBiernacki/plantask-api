@@ -2,8 +2,8 @@ import { registerEnumType } from '@nestjs/graphql';
 
 export enum AccountType {
   Normal = 'Normal',
-  Employee = 'employee',
-  Organizer = 'organizer',
+  Employee = 'Employee',
+  Organizer = 'Organizer',
 }
 
 registerEnumType(AccountType, {

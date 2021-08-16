@@ -2,43 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Project {
-  id: ID!
-  created_at: Date!
-  name: String!
-  tasks(offset: Int = 0, limit: Int = 10): [Task!]!
-}
-
-"""Date custom scalar type"""
-scalar Date
-
-type Task {
-  id: ID!
-  created_at: Date!
-  type: TaskType!
-  level: TaskLevel!
-  description: String!
-  project: Project
-}
-
-enum TaskType {
-  ISSUE
-  TASK
-  GOALS
-}
-
-enum TaskLevel {
-  LOW
-  NORMAL
-  IMPORTANT
-  VARY_IMPORTANT
-}
-
 type Company {
   id: ID!
   created_at: Date!
   name: String!
 }
+
+"""Date custom scalar type"""
+scalar Date
 
 type User {
   id: ID!
@@ -56,6 +27,40 @@ enum AccountType {
   Organizer
 }
 
+type Project {
+  id: ID!
+  created_at: Date!
+  created_by: User!
+  name: String!
+  company: Company
+  tasks(offset: Int = 0, limit: Int = 10): [Task!]!
+  creator: User!
+}
+
+type Task {
+  id: ID!
+  created_at: Date!
+  created_by: User!
+  type: TaskType!
+  level: TaskLevel!
+  description: String!
+  project: Project
+  creator: User!
+}
+
+enum TaskType {
+  ISSUE
+  TASK
+  GOALS
+}
+
+enum TaskLevel {
+  LOW
+  NORMAL
+  IMPORTANT
+  VARY_IMPORTANT
+}
+
 type LoginResult {
   access_token: String!
 }
@@ -65,10 +70,10 @@ type Query {
   findOneTask(id: ID!): Task!
   findAllProject(offset: Int = 0, limit: Int = 10): [Project!]!
   findOneProject(id: ID!): Project!
-  login(loginInput: LoginInput!): LoginResult!
   findAllUser(offset: Int = 0, limit: Int = 10): [User!]!
   findOneUser(id: ID!): User!
   me: User!
+  login(loginInput: LoginInput!): LoginResult!
   findAllCompany(offset: Int = 0, limit: Int = 10): [Company!]!
   findOneCompany(id: ID!): Company!
 }
