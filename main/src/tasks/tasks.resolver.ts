@@ -1,10 +1,9 @@
 import {
-  Resolver,
-  Query,
-  Mutation,
   Args,
-  ResolveField,
+  Mutation,
   Parent,
+  ResolveField,
+  Resolver,
 } from '@nestjs/graphql';
 import { TasksService } from './tasks.service';
 import { Task } from './entities/task.entity';
@@ -12,32 +11,23 @@ import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
-import { PaginationArgs } from '../common/dto/pagination.args';
 import { GetIdArgs } from '../common/dto/getId.args';
+import { BaseResolver } from '../common/resolvers/base.resolver';
 
 @Resolver(() => Task)
-export class TasksResolver {
+export class TasksResolver extends BaseResolver(Task) {
   constructor(
     private readonly tasksService: TasksService,
     private readonly projectsService: ProjectsService,
-  ) {}
+  ) {
+    super(tasksService);
+  }
 
   @Mutation(() => Task)
   async createTask(@Args('createTaskInput') createTaskInput: CreateTaskInput) {
     const { projectId } = createTaskInput;
-    const project = await this.projectsService.findOne(projectId);
-    return this.tasksService.create(project, createTaskInput);
-  }
-
-  @Query(() => [Task], { name: 'tasks' })
-  findAll(@Args() pagination: PaginationArgs) {
-    const { limit, offset } = pagination;
-    return this.tasksService.findAll().limit(limit).skip(offset);
-  }
-
-  @Query(() => Task, { name: 'task' })
-  findOne(@Args() { id }: GetIdArgs) {
-    return this.tasksService.findOne(id);
+    createTaskInput.project = await this.projectsService.findOne(projectId);
+    return this.tasksService.create(createTaskInput);
   }
 
   @Mutation(() => Task)

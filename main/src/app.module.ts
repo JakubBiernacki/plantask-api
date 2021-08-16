@@ -8,6 +8,7 @@ import { GqlConfig } from './config/graphql.config';
 import { ProjectsModule } from './projects/projects.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UsersModule } from './users/users.module';
     ProjectsModule,
     AuthModule,
     UsersModule,
+    CompaniesModule,
   ],
   controllers: [],
   providers: [],

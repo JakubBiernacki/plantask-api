@@ -2,10 +2,10 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { TaskType } from '../enums/type.enum';
 import { TaskLevel } from '../enums/level.enum';
+import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
 import { BaseEntity } from '../../common/entities/base.entitie';
 import { Project } from '../../projects/entities/project.entity';
-import * as mongoose from 'mongoose';
 
 @Schema()
 @ObjectType()

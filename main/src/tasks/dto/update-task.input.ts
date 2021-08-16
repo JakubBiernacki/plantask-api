@@ -1,5 +1,5 @@
 import { CreateTaskInput } from './create-task.input';
-import { InputType, Field, PartialType, ID, OmitType } from '@nestjs/graphql';
+import { Field, ID, InputType, OmitType, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateTaskInput extends PartialType(

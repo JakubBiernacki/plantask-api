@@ -5,11 +5,11 @@ import { Document } from 'mongoose';
 
 @Schema()
 @ObjectType()
-export class Project extends BaseEntity {
-  @Prop()
+export class Company extends BaseEntity {
+  @Prop({ unique: true })
   @Field()
   name: string;
 }
 
-export type ProjectDocument = Project & Document;
-export const ProjectSchema = SchemaFactory.createForClass(Project);
+export type CompanyDocument = Company & Document;
+export const CompanySchema = SchemaFactory.createForClass(Company);

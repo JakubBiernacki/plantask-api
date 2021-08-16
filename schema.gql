@@ -34,12 +34,19 @@ enum TaskLevel {
   VARY_IMPORTANT
 }
 
+type Company {
+  id: ID!
+  created_at: Date!
+  name: String!
+}
+
 type User {
   id: ID!
   created_at: Date!
   username: String!
   email: String!
   accountType: AccountType!
+  company: Company
   role: String!
 }
 
@@ -54,12 +61,16 @@ type LoginResult {
 }
 
 type Query {
-  tasks(offset: Int = 0, limit: Int = 10): [Task!]!
-  task(id: ID!): Task!
-  projects(offset: Int = 0, limit: Int = 10): [Project!]!
-  project(id: ID!): Project!
+  findAllTask(offset: Int = 0, limit: Int = 10): [Task!]!
+  findOneTask(id: ID!): Task!
+  findAllProject(offset: Int = 0, limit: Int = 10): [Project!]!
+  findOneProject(id: ID!): Project!
   login(loginInput: LoginInput!): LoginResult!
+  findAllUser(offset: Int = 0, limit: Int = 10): [User!]!
+  findOneUser(id: ID!): User!
   me: User!
+  findAllCompany(offset: Int = 0, limit: Int = 10): [Company!]!
+  findOneCompany(id: ID!): Company!
 }
 
 input LoginInput {
@@ -75,6 +86,9 @@ type Mutation {
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   removeProject(id: ID!): Project!
   createUser(createUserInput: CreateUserInput!): User!
+  createCompany(createCompanyInput: CreateCompanyInput!): Company!
+  updateCompany(updateCompanyInput: UpdateCompanyInput!): Company!
+  removeCompany(id: ID!): Company!
 }
 
 input CreateTaskInput {
@@ -104,4 +118,13 @@ input CreateUserInput {
   username: String!
   email: String!
   password: String!
+}
+
+input CreateCompanyInput {
+  name: String!
+}
+
+input UpdateCompanyInput {
+  name: String
+  id: Int!
 }

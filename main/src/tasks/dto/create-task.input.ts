@@ -1,8 +1,9 @@
-import { InputType, Field, ID } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 import { TaskType } from '../enums/type.enum';
 import { TaskLevel } from '../enums/level.enum';
 import { ObjectId } from 'mongoose';
 import { MinLength } from 'class-validator';
+import { Project } from '../../projects/entities/project.entity';
 
 @InputType()
 export class CreateTaskInput {
@@ -18,4 +19,6 @@ export class CreateTaskInput {
 
   @Field(() => ID, { nullable: true })
   projectId?: ObjectId;
+
+  project?: Project;
 }

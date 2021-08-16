@@ -9,21 +9,20 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { CreateUserInput } from './dto/create-user.input';
+import { BaseService } from '../common/services/base.service';
 
 @Injectable()
-export class UsersService {
+export class UsersService extends BaseService<User> {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
-  ) {}
+  ) {
+    super(userModel);
+  }
 
   login(user) {
     return this.authService.login(user);
-  }
-
-  findById(id) {
-    return this.userModel.findById(id);
   }
 
   findByUsername(username: string) {

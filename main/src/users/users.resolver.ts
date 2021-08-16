@@ -5,15 +5,18 @@ import { GetUser } from '../auth/decorators/getUser.decorator';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/jwt-gqlAuth.guard';
 import { CreateUserInput } from './dto/create-user.input';
+import { BaseResolver } from '../common/resolvers/base.resolver';
 
 @Resolver(() => User)
-export class UsersResolver {
-  constructor(private usersService: UsersService) {}
+export class UsersResolver extends BaseResolver(User) {
+  constructor(private usersService: UsersService) {
+    super(usersService);
+  }
 
   @UseGuards(GqlAuthGuard)
   @Query(() => User)
   me(@GetUser() user: User) {
-    return this.usersService.findById(user.id);
+    return user;
   }
 
   @Mutation(() => User)
