@@ -6,6 +6,7 @@ type Company {
   id: ID!
   created_at: Date!
   name: String!
+  users: [User!]!
 }
 
 """Date custom scalar type"""

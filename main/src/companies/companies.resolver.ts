@@ -1,4 +1,11 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { CompaniesService } from './companies.service';
 import { Company } from './entities/company.entity';
 import { BaseResolver } from '../common/resolvers/base.resolver';
@@ -9,11 +16,19 @@ import { GetUser } from '../auth/decorators/getUser.decorator';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/jwt-gqlAuth.guard';
 import { AccountType } from '../users/enums/accountType.enum';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+import { ACCOUNT_Types } from '../auth/decorators/accountType.decorator';
+import { AccountTypeGuard } from '../auth/guards/accountType.guard';
+import { InCompanyGuard } from './guards/InCompany.guard';
 
 @Resolver(() => Company)
 @UseGuards(GqlAuthGuard)
 export class CompaniesResolver extends BaseResolver(Company) {
-  constructor(private readonly companiesService: CompaniesService) {
+  constructor(
+    private readonly companiesService: CompaniesService,
+    private readonly usersService: UsersService,
+  ) {
     super(companiesService);
   }
 
@@ -29,6 +44,14 @@ export class CompaniesResolver extends BaseResolver(Company) {
     return company;
   }
 
+  @UseGuards(InCompanyGuard)
+  @Query(() => Company, { name: `findOne${Company.name}` })
+  async findOne(@Args() args: GetIdArgs) {
+    return super.findOne(args);
+  }
+
+  @ACCOUNT_Types(AccountType.Organizer)
+  @UseGuards(InCompanyGuard, AccountTypeGuard)
   @Mutation(() => Company)
   updateCompany(
     @Args('updateCompanyInput') updateCompanyInput: UpdateCompanyInput,
@@ -39,8 +62,15 @@ export class CompaniesResolver extends BaseResolver(Company) {
     );
   }
 
+  @ACCOUNT_Types(AccountType.Organizer)
+  @UseGuards(InCompanyGuard, AccountTypeGuard)
   @Mutation(() => Company)
   removeCompany(@Args() { id }: GetIdArgs) {
     return this.companiesService.remove(id);
+  }
+
+  @ResolveField('users', () => [User])
+  getUsers(@Parent() company: Company) {
+    this.usersService.findByCompany(company);
   }
 }

@@ -4,11 +4,13 @@ import { User, UserSchema } from './entities/user.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from '../auth/auth.module';
 import { UsersResolver } from './users.resolver';
+import { CompaniesModule } from '../companies/companies.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     forwardRef(() => AuthModule),
+    forwardRef(() => CompaniesModule),
   ],
   providers: [UsersService, UsersResolver],
   exports: [UsersService],

@@ -10,6 +10,7 @@ import { User, UserDocument } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { BaseService } from '../common/services/base.service';
+import { Company } from '../companies/entities/company.entity';
 
 @Injectable()
 export class UsersService extends BaseService<User> {
@@ -31,6 +32,10 @@ export class UsersService extends BaseService<User> {
 
   findByUsernameWithPassword(username: string) {
     return this.findByUsername(username).select('+password');
+  }
+
+  findByCompany(company: Company) {
+    return this.userModel.find({ company });
   }
 
   async create(createUserDto: CreateUserInput) {

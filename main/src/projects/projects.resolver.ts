@@ -19,12 +19,12 @@ import { GqlAuthGuard } from '../auth/guards/jwt-gqlAuth.guard';
 import { GetUser } from '../auth/decorators/getUser.decorator';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { InOrganizationGuard } from '../auth/guards/inOrganization.guard';
 import { ACCOUNT_Types } from '../auth/decorators/accountType.decorator';
 import { AccountType } from '../users/enums/accountType.enum';
 import { AccountTypeGuard } from '../auth/guards/accountType.guard';
 import { Company } from '../companies/entities/company.entity';
 import { CompaniesService } from '../companies/companies.service';
+import { ProjectInOrganizationGuard } from './guards/ProjectInOrganization.guard';
 
 @Resolver(() => Project)
 @UseGuards(GqlAuthGuard)
@@ -37,7 +37,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
     super(projectsService);
   }
 
-  @UseGuards(InOrganizationGuard)
+  @UseGuards(ProjectInOrganizationGuard)
   @Query(() => Project, { name: `findOne${Project.name}` })
   async findOne(@Args() args: GetIdArgs) {
     return super.findOne(args);
@@ -56,7 +56,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
   }
 
   @ACCOUNT_Types(AccountType.Normal, AccountType.Organizer)
-  @UseGuards(InOrganizationGuard, AccountTypeGuard)
+  @UseGuards(ProjectInOrganizationGuard, AccountTypeGuard)
   @Mutation(() => Project)
   updateProject(
     @Args('updateProjectInput') updateProjectInput: UpdateProjectInput,
@@ -68,7 +68,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
   }
 
   @ACCOUNT_Types(AccountType.Normal, AccountType.Organizer)
-  @UseGuards(InOrganizationGuard, AccountTypeGuard)
+  @UseGuards(ProjectInOrganizationGuard, AccountTypeGuard)
   @Mutation(() => Project)
   removeProject(@Args() { id }: GetIdArgs) {
     return this.projectsService.remove(id);
