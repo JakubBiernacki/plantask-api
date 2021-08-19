@@ -9,7 +9,7 @@ export abstract class InOrganizationGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
     const { user } = ctx.getContext().req;
-    const { id } = ctx.getArgs();
+    const id = ctx.getArgs().id || Object.values<any>(ctx.getArgs())[0].id;
     const object = await this.service.findOne(id);
 
     if (!object?.company) {

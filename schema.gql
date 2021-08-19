@@ -132,5 +132,5 @@ input CreateCompanyInput {
 
 input UpdateCompanyInput {
   name: String
-  id: Int!
+  id: String!
 }
