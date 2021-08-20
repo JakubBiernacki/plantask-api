@@ -14,7 +14,7 @@ import { Task } from '../tasks/entities/task.entity';
 import { PaginationArgs } from '../common/dto/pagination.args';
 import { GetIdArgs } from '../common/dto/getId.args';
 import { BaseResolver } from '../common/resolvers/base.resolver';
-import { UseGuards } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/jwt-gqlAuth.guard';
 import { GetUser } from '../auth/decorators/getUser.decorator';
 import { User } from '../users/entities/user.entity';
@@ -46,12 +46,32 @@ export class ProjectsResolver extends BaseResolver(Project) {
   @ACCOUNT_Types(AccountType.Normal, AccountType.Organizer)
   @UseGuards(AccountTypeGuard)
   @Mutation(() => Project)
-  createProject(
+  async createProject(
     @GetUser() user,
     @Args('createProjectInput') createProjectInput: CreateProjectInput,
   ) {
     createProjectInput.created_by = user;
     createProjectInput.company = user?.company;
+
+    const users = [user.id, ...createProjectInput.users];
+
+    if (createProjectInput.company) {
+      createProjectInput.users = await Promise.all(
+        users.map((userId) => this.usersService.findOne(userId)),
+      );
+
+      createProjectInput.users.forEach((user: User & any) => {
+        if (
+          !user?.company ||
+          !user.company.equals(createProjectInput.company)
+        ) {
+          throw new BadRequestException(
+            `user ${user.username} is not in company`,
+          );
+        }
+      });
+    }
+
     return this.projectsService.create(createProjectInput);
   }
 
@@ -93,5 +113,10 @@ export class ProjectsResolver extends BaseResolver(Project) {
   getCompany(@Parent() project: Project) {
     const { company } = project;
     return this.companiesService.findOne(company);
+  }
+
+  @ResolveField('users', () => [User])
+  getUsers(@Parent() project: Project) {
+    return this.projectsService.getUsersByProjectId(project);
   }
 }

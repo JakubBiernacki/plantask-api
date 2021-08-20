@@ -25,4 +25,8 @@ export class ProjectsService extends BaseService<Project> {
   getTasksByProjectId(project: Project) {
     return this.tasksService.findByProject(project);
   }
+
+  async getUsersByProjectId(project: Project) {
+    return (await this.projectModel.findOne(project).populate('users')).users;
+  }
 }

@@ -4,6 +4,7 @@ import { Document } from 'mongoose';
 import { BaseWithCreatorEntity } from '../../common/entities/baseWithCreator.entitie';
 import { Company } from '../../companies/entities/company.entity';
 import * as mongoose from 'mongoose';
+import { User } from '../../users/entities/user.entity';
 
 @Schema()
 @ObjectType()
@@ -18,6 +19,10 @@ export class Project extends BaseWithCreatorEntity {
   })
   @Field(() => Company, { nullable: true })
   company?: Company;
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
+  @Field(() => [User])
+  users: User[];
 }
 
 export type ProjectDocument = Project & Document;

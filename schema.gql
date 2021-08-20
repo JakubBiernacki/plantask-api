@@ -34,6 +34,7 @@ type Project {
   created_by: User!
   name: String!
   company: Company
+  users: [User!]!
   tasks(offset: Int = 0, limit: Int = 10): [Task!]!
   creator: User!
 }
@@ -113,10 +114,12 @@ input UpdateTaskInput {
 
 input CreateProjectInput {
   name: String!
+  users: [ID!] = []
 }
 
 input UpdateProjectInput {
   name: String
+  users: [ID!] = []
   id: Int!
 }
 
