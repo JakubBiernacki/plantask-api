@@ -8,7 +8,7 @@ import { IsAdminGuard } from '../../auth/guards/isAdmin.guard';
 export function BaseResolver<T extends Type<unknown>>(classRef: T): any {
   @Resolver({ isAbstract: true })
   abstract class BaseResolverHost {
-    constructor(private readonly baseService: IBaseService) {}
+    constructor(private baseService: IBaseService) {}
 
     @UseGuards(IsAdminGuard)
     @Query(() => [classRef], { name: `findAll${classRef.name}` })

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ProjectInOrganizationGuard extends InOrganizationGuard {
-  constructor(private readonly projectsService: ProjectsService) {
+  constructor(private projectsService: ProjectsService) {
     super(projectsService);
   }
 }

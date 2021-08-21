@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export abstract class BaseService<T> implements IBaseService {
-  protected constructor(private readonly genericModel: Model<T & Document>) {}
+  protected constructor(private genericModel: Model<T & Document>) {}
 
   async findAll({ limit, offset }) {
     return this.genericModel.find().limit(limit).skip(offset);

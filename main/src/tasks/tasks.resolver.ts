@@ -23,8 +23,8 @@ import { User } from '../users/entities/user.entity';
 @UseGuards(GqlAuthGuard)
 export class TasksResolver extends BaseResolver(Task) {
   constructor(
-    private readonly tasksService: TasksService,
-    private readonly projectsService: ProjectsService,
+    private tasksService: TasksService,
+    private projectsService: ProjectsService,
     private usersService: UsersService,
   ) {
     super(tasksService, usersService);

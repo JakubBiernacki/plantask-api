@@ -20,14 +20,14 @@ import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { ACCOUNT_Types } from '../auth/decorators/accountType.decorator';
 import { AccountTypeGuard } from '../auth/guards/accountType.guard';
-import { InCompanyGuard } from './guards/InCompany.guard';
+import { OrganizationInOrganizationGuard } from './guards/organizationInOrganization.guard';
 
 @Resolver(() => Company)
 @UseGuards(GqlAuthGuard)
 export class CompaniesResolver extends BaseResolver(Company) {
   constructor(
-    private readonly companiesService: CompaniesService,
-    private readonly usersService: UsersService,
+    private companiesService: CompaniesService,
+    private usersService: UsersService,
   ) {
     super(companiesService);
   }
@@ -44,14 +44,14 @@ export class CompaniesResolver extends BaseResolver(Company) {
     return company;
   }
 
-  @UseGuards(InCompanyGuard)
+  @UseGuards(OrganizationInOrganizationGuard)
   @Query(() => Company, { name: `findOne${Company.name}` })
   async findOne(@Args() args: GetIdArgs) {
     return super.findOne(args);
   }
 
   @ACCOUNT_Types(AccountType.Organizer)
-  @UseGuards(InCompanyGuard, AccountTypeGuard)
+  @UseGuards(OrganizationInOrganizationGuard, AccountTypeGuard)
   @Mutation(() => Company)
   updateCompany(
     @Args('updateCompanyInput') updateCompanyInput: UpdateCompanyInput,
@@ -63,7 +63,7 @@ export class CompaniesResolver extends BaseResolver(Company) {
   }
 
   @ACCOUNT_Types(AccountType.Organizer)
-  @UseGuards(InCompanyGuard, AccountTypeGuard)
+  @UseGuards(OrganizationInOrganizationGuard, AccountTypeGuard)
   @Mutation(() => Company)
   removeCompany(@Args() { id }: GetIdArgs) {
     return this.companiesService.remove(id);

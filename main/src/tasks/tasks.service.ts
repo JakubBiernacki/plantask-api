@@ -8,17 +8,15 @@ import { BaseService } from '../common/services/base.service';
 
 @Injectable()
 export class TasksService extends BaseService<Task> {
-  constructor(
-    @InjectModel(Task.name) private readonly taskModel: Model<TaskDocument>,
-  ) {
+  constructor(@InjectModel(Task.name) private taskModel: Model<TaskDocument>) {
     super(taskModel);
   }
 
-  create(createTaskInput: CreateTaskInput) {
+  async create(createTaskInput: CreateTaskInput) {
     return this.taskModel.create(createTaskInput);
   }
 
-  findByProject(project: Project) {
+  findTasksByProject(project: Project) {
     return this.taskModel.find({ project });
   }
 }

@@ -10,23 +10,27 @@ import { BaseService } from '../common/services/base.service';
 export class ProjectsService extends BaseService<Project> {
   constructor(
     @InjectModel(Project.name)
-    private readonly projectModel: Model<ProjectDocument>,
-    private readonly tasksService: TasksService,
+    private projectModel: Model<ProjectDocument>,
+    private tasksService: TasksService,
   ) {
     super(projectModel);
   }
 
   async remove(id) {
     const project = await this.findOne(id);
-    this.tasksService.findByProject(project).deleteMany();
+    this.tasksService.findTasksByProject(project).deleteMany();
     return project.remove();
   }
 
   getTasksByProjectId(project: Project) {
-    return this.tasksService.findByProject(project);
+    return this.tasksService.findTasksByProject(project);
   }
 
   async getUsersByProjectId(project: Project) {
     return (await this.projectModel.findOne(project).populate('users')).users;
+  }
+
+  getProjectsByUserId(user) {
+    return this.projectModel.find({ users: { $in: user } });
   }
 }
