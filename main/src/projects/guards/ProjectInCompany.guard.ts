@@ -1,9 +1,9 @@
-import { InOrganizationGuard } from '../../common/guards/inOrganization.guard';
+import { InCompanyGuard } from '../../common/guards/inCompany.guard';
 import { ProjectsService } from '../projects.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ProjectInOrganizationGuard extends InOrganizationGuard {
+export class ProjectInCompanyGuard extends InCompanyGuard {
   constructor(private projectsService: ProjectsService) {
     super(projectsService);
   }

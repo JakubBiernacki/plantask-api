@@ -24,7 +24,7 @@ import { AccountType } from '../users/enums/accountType.enum';
 import { AccountTypeGuard } from '../auth/guards/accountType.guard';
 import { Company } from '../companies/entities/company.entity';
 import { CompaniesService } from '../companies/companies.service';
-import { ProjectInOrganizationGuard } from './guards/ProjectInOrganization.guard';
+import { ProjectInCompanyGuard } from './guards/ProjectInCompany.guard';
 
 @Resolver(() => Project)
 @UseGuards(GqlAuthGuard)
@@ -37,7 +37,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
     super(projectsService);
   }
 
-  @UseGuards(ProjectInOrganizationGuard)
+  @UseGuards(ProjectInCompanyGuard)
   @Query(() => Project, { name: `findOne${Project.name}` })
   async findOne(@Args() args: GetIdArgs) {
     return super.findOne(args);
@@ -76,7 +76,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
   }
 
   @ACCOUNT_Types(AccountType.Normal, AccountType.Organizer)
-  @UseGuards(ProjectInOrganizationGuard, AccountTypeGuard)
+  @UseGuards(ProjectInCompanyGuard, AccountTypeGuard)
   @Mutation(() => Project)
   updateProject(
     @Args('updateProjectInput') updateProjectInput: UpdateProjectInput,
@@ -88,7 +88,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
   }
 
   @ACCOUNT_Types(AccountType.Normal, AccountType.Organizer)
-  @UseGuards(ProjectInOrganizationGuard, AccountTypeGuard)
+  @UseGuards(ProjectInCompanyGuard, AccountTypeGuard)
   @Mutation(() => Project)
   removeProject(@Args() { id }: GetIdArgs) {
     return this.projectsService.remove(id);

@@ -20,7 +20,7 @@ import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { ACCOUNT_Types } from '../auth/decorators/accountType.decorator';
 import { AccountTypeGuard } from '../auth/guards/accountType.guard';
-import { OrganizationInOrganizationGuard } from './guards/organizationInOrganization.guard';
+import { CompanyInCompanyGuard } from './guards/CompanyInCompany.guard';
 
 @Resolver(() => Company)
 @UseGuards(GqlAuthGuard)
@@ -44,14 +44,14 @@ export class CompaniesResolver extends BaseResolver(Company) {
     return company;
   }
 
-  @UseGuards(OrganizationInOrganizationGuard)
+  @UseGuards(CompanyInCompanyGuard)
   @Query(() => Company, { name: `findOne${Company.name}` })
   async findOne(@Args() args: GetIdArgs) {
     return super.findOne(args);
   }
 
   @ACCOUNT_Types(AccountType.Organizer)
-  @UseGuards(OrganizationInOrganizationGuard, AccountTypeGuard)
+  @UseGuards(CompanyInCompanyGuard, AccountTypeGuard)
   @Mutation(() => Company)
   updateCompany(
     @Args('updateCompanyInput') updateCompanyInput: UpdateCompanyInput,
@@ -63,7 +63,7 @@ export class CompaniesResolver extends BaseResolver(Company) {
   }
 
   @ACCOUNT_Types(AccountType.Organizer)
-  @UseGuards(OrganizationInOrganizationGuard, AccountTypeGuard)
+  @UseGuards(CompanyInCompanyGuard, AccountTypeGuard)
   @Mutation(() => Company)
   removeCompany(@Args() { id }: GetIdArgs) {
     return this.companiesService.remove(id);

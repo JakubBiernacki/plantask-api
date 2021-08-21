@@ -18,7 +18,7 @@ import { CompaniesService } from '../companies/companies.service';
 import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { GetIdArgs } from '../common/dto/getId.args';
-import { UserInOrganizationGuard } from './guards/userInOrganization.guard';
+import { UserInCompanyGuard } from './guards/userInCompany.guard';
 
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver(User) {
@@ -36,7 +36,7 @@ export class UsersResolver extends BaseResolver(User) {
     return user;
   }
 
-  @UseGuards(GqlAuthGuard, UserInOrganizationGuard)
+  @UseGuards(GqlAuthGuard, UserInCompanyGuard)
   @Query(() => User, { name: `findOneUser` })
   async findOne(@Args() args: GetIdArgs) {
     return super.findOne(args);

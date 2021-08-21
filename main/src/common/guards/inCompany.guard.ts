@@ -3,7 +3,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { BaseService } from '../services/base.service';
 
 @Injectable()
-export abstract class InOrganizationGuard implements CanActivate {
+export abstract class InCompanyGuard implements CanActivate {
   protected constructor(private service: BaseService<any>) {}
 
   async getData(context: ExecutionContext) {
