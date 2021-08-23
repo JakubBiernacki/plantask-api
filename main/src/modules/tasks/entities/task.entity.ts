@@ -5,11 +5,11 @@ import { TaskLevel } from '../enums/level.enum';
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
 import { Project } from '../../projects/entities/project.entity';
-import { BaseWithCreatorEntity } from '../../../common/base/entities/baseWithCreator.entitie';
+import { BaseCreatorEntity } from '../../../common/base/entities/base-creator.entitie';
 
 @Schema()
 @ObjectType()
-export class Task extends BaseWithCreatorEntity {
+export class Task extends BaseCreatorEntity {
   @Prop({ enum: TaskType })
   @Field(() => TaskType)
   type: TaskType;

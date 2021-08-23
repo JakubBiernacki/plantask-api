@@ -6,7 +6,7 @@ import { User } from '../../../modules/users/entities/user.entity';
 
 @Schema()
 @ObjectType()
-export class BaseWithCreatorEntity extends BaseEntity {
+export class BaseCreatorEntity extends BaseEntity {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   @Field(() => User)
   created_by: User;

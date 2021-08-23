@@ -1,14 +1,14 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { BaseWithCreatorEntity } from '../../../common/base/entities/baseWithCreator.entitie';
+import { BaseCreatorEntity } from '../../../common/base/entities/base-creator.entitie';
 import { Organization } from '../../organizations/entities/organization.entity';
 import * as mongoose from 'mongoose';
 import { User } from '../../users/entities/user.entity';
 
 @Schema()
 @ObjectType()
-export class Project extends BaseWithCreatorEntity {
+export class Project extends BaseCreatorEntity {
   @Prop()
   @Field()
   name: string;
