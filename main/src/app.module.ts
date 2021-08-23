@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TasksModule } from './tasks/tasks.module';
+import { TasksModule } from './modules/tasks/tasks.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongooseConfig } from './config/mongoose.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { GqlConfig } from './config/graphql.config';
-import { ProjectsModule } from './projects/projects.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { CompaniesModule } from './companies/companies.module';
+import { ProjectsModule } from './modules/projects/projects.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { OrganizationsModule } from './modules/organizations/organizations.module';
 
 @Module({
   imports: [
@@ -16,18 +16,22 @@ import { CompaniesModule } from './companies/companies.module';
       envFilePath: '../.env',
     }),
     GraphQLModule.forRootAsync({
-      useClass: GqlConfig,
+      imports: [ConfigModule.forFeature(GqlConfig)],
+      useFactory: async (configService: ConfigService) =>
+        configService.get('graphql'),
+      inject: [ConfigService],
     }),
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule.forFeature(MongooseConfig)],
+      useFactory: async (configService: ConfigService) =>
+        configService.get('mongoose'),
       inject: [ConfigService],
-      useClass: MongooseConfig,
     }),
     TasksModule,
     ProjectsModule,
     AuthModule,
     UsersModule,
-    CompaniesModule,
+    OrganizationsModule,
   ],
   controllers: [],
   providers: [],

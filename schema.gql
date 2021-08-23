@@ -2,11 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Company {
+type Organization {
   id: ID!
   created_at: Date!
   name: String!
   users: [User!]!
+  projects: [Project!]
 }
 
 """Date custom scalar type"""
@@ -18,7 +19,7 @@ type User {
   username: String!
   email: String!
   accountType: AccountType!
-  company: Company
+  organization: Organization
   role: String!
   projects: [Project!]
 }
@@ -34,7 +35,7 @@ type Project {
   created_at: Date!
   created_by: User!
   name: String!
-  company: Company
+  organization: Organization
   users: [User!]!
   tasks(offset: Int = 0, limit: Int = 10): [Task!]!
   creator: User!
@@ -77,8 +78,8 @@ type Query {
   findOneUser(id: ID!): User!
   me: User!
   login(loginInput: LoginInput!): LoginResult!
-  findAllCompany(offset: Int = 0, limit: Int = 10): [Company!]!
-  findOneCompany(id: ID!): Company!
+  findAllOrganization(offset: Int = 0, limit: Int = 10): [Organization!]!
+  findOneOrganization(id: ID!): Organization!
 }
 
 input LoginInput {
@@ -94,9 +95,9 @@ type Mutation {
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   removeProject(id: ID!): Project!
   createUser(createUserInput: CreateUserInput!): User!
-  createCompany(createCompanyInput: CreateCompanyInput!): Company!
-  updateCompany(updateCompanyInput: UpdateCompanyInput!): Company!
-  removeCompany(id: ID!): Company!
+  createOrganization(createOrganizationInput: CreateOrganizationInput!): Organization!
+  updateOrganization(updateOrganizationInput: UpdateOrganizationInput!): Organization!
+  removeOrganization(id: ID!): Organization!
 }
 
 input CreateTaskInput {
@@ -130,11 +131,11 @@ input CreateUserInput {
   password: String!
 }
 
-input CreateCompanyInput {
+input CreateOrganizationInput {
   name: String!
 }
 
-input UpdateCompanyInput {
+input UpdateOrganizationInput {
   name: String
   id: String!
 }

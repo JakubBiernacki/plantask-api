@@ -1,11 +1,7 @@
-import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
+import { registerAs } from '@nestjs/config';
 
-export class GqlConfig implements GqlOptionsFactory {
-  createGqlOptions(): GqlModuleOptions {
-    return {
-      debug: false,
-      playground: true,
-      autoSchemaFile: '../schema.gql',
-    };
-  }
-}
+export const GqlConfig = registerAs('graphql', () => ({
+  autoSchemaFile: '../schema.gql',
+  playground: true,
+  debug: false,
+}));
