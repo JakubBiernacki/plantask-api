@@ -29,9 +29,6 @@ export class User extends BaseEntity {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'organization',
-    required: function () {
-      return this.accountType !== AccountType.Normal;
-    },
   })
   @Field(() => Organization, { nullable: true })
   organization?: Organization;

@@ -10,7 +10,6 @@ import { User, UserDocument } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { BaseService } from '../../common/base/base.service';
-import { Organization } from '../organizations/entities/organization.entity';
 
 @Injectable()
 export class UsersService extends BaseService<User> {
@@ -34,7 +33,7 @@ export class UsersService extends BaseService<User> {
     return this.findByUsername(username).select('+password');
   }
 
-  findByorganization(organization: Organization) {
+  findByOrganization(organization) {
     return this.userModel.find({ organization });
   }
 

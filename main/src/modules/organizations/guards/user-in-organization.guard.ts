@@ -1,19 +1,16 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
+import { OrganizationsService } from '../organizations.service';
 import { InOrganizationGuard } from '../../../common/base/in-organization.guard';
-import { UsersService } from '../users.service';
 
 @Injectable()
 export class UserInOrganizationGuard extends InOrganizationGuard {
-  constructor(private usersService: UsersService) {
-    super(usersService);
+  constructor(private organizationsService: OrganizationsService) {
+    super(organizationsService);
   }
+
   async canActivate(context: ExecutionContext) {
     const { user, object } = await super.getData(context);
 
-    if (!user?.organization) {
-      return user.equals(object);
-    }
-
-    return user.organization.equals(object.organization);
+    return object.equals(user?.organization);
   }
 }

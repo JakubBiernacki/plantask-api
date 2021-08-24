@@ -34,7 +34,7 @@ export class ProjectsService extends BaseService<Project> {
     return this.projectModel.find({ users: { $in: user } });
   }
 
-  getProjectsByorganization(organization) {
+  getProjectsByOrganization(organization) {
     return this.projectModel.find({ organization });
   }
 }
