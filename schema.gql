@@ -6,7 +6,7 @@ type Organization {
   id: ID!
   created_at: Date!
   name: String!
-  users: [User!]!
+  members: [User!]!
   projects: [Project!]
 }
 
@@ -39,6 +39,7 @@ type Project {
   users: [User!]!
   tasks(offset: Int = 0, limit: Int = 10): [Task!]!
   creator: User!
+  contributors: [User!]!
 }
 
 type Task {
@@ -67,6 +68,8 @@ enum TaskLevel {
 
 type LoginResult {
   access_token: String!
+  expiresIn: Int!
+  refresh_token: String!
 }
 
 type Query {
@@ -77,14 +80,8 @@ type Query {
   findAllUser(offset: Int = 0, limit: Int = 10): [User!]!
   findOneUser(id: ID!): User!
   me: User!
-  login(loginInput: LoginInput!): LoginResult!
   findAllOrganization(offset: Int = 0, limit: Int = 10): [Organization!]!
   findOneOrganization(id: ID!): Organization!
-}
-
-input LoginInput {
-  username: String!
-  password: String!
 }
 
 type Mutation {
@@ -95,6 +92,8 @@ type Mutation {
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   removeProject(id: ID!): Project!
   createUser(createUserInput: CreateUserInput!): User!
+  login(loginInput: LoginInput!): LoginResult!
+  refreshToken(refreshToken: String!): LoginResult!
   createOrganization(createOrganizationInput: CreateOrganizationInput!): Organization!
   updateOrganization(updateOrganizationInput: UpdateOrganizationInput!): Organization!
   removeOrganization(id: ID!): Organization!
@@ -128,6 +127,11 @@ input UpdateProjectInput {
 input CreateUserInput {
   username: String!
   email: String!
+  password: String!
+}
+
+input LoginInput {
+  username: String!
   password: String!
 }
 

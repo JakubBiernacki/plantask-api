@@ -110,12 +110,12 @@ export class ProjectsResolver extends BaseResolver(Project) {
   }
 
   @ResolveField('organization', () => Organization, { nullable: true })
-  getorganization(@Parent() project: Project) {
+  getOrganization(@Parent() project: Project) {
     const { organization } = project;
     return this.organizationsService.findOne(organization);
   }
 
-  @ResolveField('users', () => [User])
+  @ResolveField('contributors', () => [User])
   getUsers(@Parent() project: Project) {
     return this.projectsService.getUsersByProjectId(project);
   }

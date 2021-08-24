@@ -86,12 +86,15 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
         { $set: { organization: null, accountType: AccountType.Normal } },
       );
 
-    await this.projectsService.getProjectsByOrganization(id).deleteMany();
+    const projects = await this.projectsService.getProjectsByOrganization(id);
+    await Promise.all(
+      projects.map((project) => this.projectsService.remove(project.id)),
+    );
 
     return this.organizationsService.remove(id);
   }
 
-  @ResolveField('users', () => [User])
+  @ResolveField('members', () => [User])
   async getUsers(@Parent() organization: Organization) {
     return this.usersService.findByOrganization(organization);
   }

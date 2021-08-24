@@ -21,10 +21,6 @@ export class UsersService extends BaseService<User> {
     super(userModel);
   }
 
-  login(user) {
-    return this.authService.login(user);
-  }
-
   findByUsername(username: string) {
     return this.userModel.findOne({ username });
   }
