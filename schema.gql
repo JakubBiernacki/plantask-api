@@ -6,7 +6,7 @@ type Organization {
   id: ID!
   created_at: Date!
   name: String!
-  members: [User!]!
+  users: [User!]!
   projects: [Project!]
 }
 
@@ -39,7 +39,6 @@ type Project {
   users: [User!]!
   tasks(offset: Int = 0, limit: Int = 10): [Task!]!
   creator: User!
-  contributors: [User!]!
 }
 
 type Task {
@@ -89,6 +88,7 @@ type Mutation {
   updateTask(updateTaskInput: UpdateTaskInput!): Task!
   removeTask(id: ID!): Task!
   createProject(createProjectInput: CreateProjectInput!): Project!
+  addProjectContributors(contributors: [String!]!, id: ID!): Project!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   removeProject(id: ID!): Project!
   createUser(createUserInput: CreateUserInput!): User!
@@ -115,13 +115,11 @@ input UpdateTaskInput {
 
 input CreateProjectInput {
   name: String!
-  users: [ID!] = []
 }
 
 input UpdateProjectInput {
   name: String
-  users: [ID!] = []
-  id: Int!
+  id: ID!
 }
 
 input CreateUserInput {

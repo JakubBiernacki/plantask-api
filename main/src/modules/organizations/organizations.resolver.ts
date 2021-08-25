@@ -82,7 +82,7 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
     await this.usersService
       .findByOrganization(id)
       .updateMany(
-        {},
+        { accountType: AccountType.Employee },
         { $set: { organization: null, accountType: AccountType.Normal } },
       );
 
@@ -94,7 +94,7 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
     return this.organizationsService.remove(id);
   }
 
-  @ResolveField('members', () => [User])
+  @ResolveField('users', () => [User])
   async getUsers(@Parent() organization: Organization) {
     return this.usersService.findByOrganization(organization);
   }

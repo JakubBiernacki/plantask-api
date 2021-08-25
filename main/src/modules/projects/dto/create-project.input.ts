@@ -1,4 +1,4 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import { User } from '../../users/entities/user.entity';
 import { Organization } from '../../organizations/entities/organization.entity';
 
@@ -7,10 +7,7 @@ export class CreateProjectInput {
   @Field()
   name: string;
 
-  @Field(() => [ID], {
-    nullable: true,
-  })
-  users?: User[] = [];
+  users: User[];
 
   created_by: User;
 

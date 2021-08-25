@@ -52,27 +52,39 @@ export class ProjectsResolver extends BaseResolver(Project) {
   ) {
     createProjectInput.created_by = user;
     createProjectInput.organization = user?.organization;
-
-    const users = [user.id, ...createProjectInput.users];
-
-    if (createProjectInput.organization) {
-      createProjectInput.users = await Promise.all(
-        users.map((userId) => this.usersService.findOne(userId)),
-      );
-
-      createProjectInput.users.forEach((user: User & any) => {
-        if (
-          !user?.organization ||
-          !user.organization.equals(createProjectInput.organization)
-        ) {
-          throw new BadRequestException(
-            `user ${user.username} is not in organization`,
-          );
-        }
-      });
-    }
+    createProjectInput.users = [user];
 
     return this.projectsService.create(createProjectInput);
+  }
+
+  @ACCOUNT_Types(AccountType.Organizer)
+  @UseGuards(UserInProjectOrganizationGuard, AccountTypeGuard)
+  @Mutation(() => Project)
+  async addProjectContributors(
+    @Args() { id }: GetIdArgs,
+    @Args({ name: 'contributors', type: () => [String] })
+    contributors: string[],
+  ) {
+    const project = await this.projectsService.findOne(id);
+
+    const newContributors = await Promise.all(
+      contributors.map((userId) => this.usersService.findOne(userId)),
+    );
+
+    newContributors.forEach((user: User & any) => {
+      if (
+        !user?.organization ||
+        !user.organization.equals(project.organization)
+      ) {
+        throw new BadRequestException(
+          `user ${user.username} is not in organization`,
+        );
+      }
+    });
+
+    project.users = [...project.users, ...newContributors];
+
+    return project.save();
   }
 
   @ACCOUNT_Types(AccountType.Normal, AccountType.Organizer)
@@ -115,7 +127,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
     return this.organizationsService.findOne(organization);
   }
 
-  @ResolveField('contributors', () => [User])
+  @ResolveField('users', () => [User])
   getUsers(@Parent() project: Project) {
     return this.projectsService.getUsersByProjectId(project);
   }
