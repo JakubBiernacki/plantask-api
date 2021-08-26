@@ -23,6 +23,7 @@ import { AccountTypeGuard } from '../auth/guards/accountType.guard';
 import { UserInOrganizationGuard } from './guards/user-in-organization.guard';
 import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
+import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
 
 @Resolver(() => Organization)
 @UseGuards(GqlAuthGuard)
@@ -72,6 +73,21 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
     return this.organizationsService.update(
       updateOrganizationInput.id,
       updateOrganizationInput,
+    );
+  }
+
+  @ACCOUNT_Types(AccountType.Organizer)
+  @UseGuards(AccountTypeGuard)
+  @Mutation(() => [InvitationToOrganization])
+  async addUsersToOrganization(
+    @GetUser() user: User,
+    @Args({ name: 'users', type: () => [String] })
+    usersIds: string[],
+  ) {
+    const users = await this.usersService.findByIds(usersIds);
+    return this.organizationsService.sendInvitationToUsers(
+      user.organization,
+      users,
     );
   }
 

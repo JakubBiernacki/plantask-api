@@ -21,16 +21,20 @@ export class UsersService extends BaseService<User> {
     super(userModel);
   }
 
-  findByUsername(username: string) {
+  findOneByUsername(username: string) {
     return this.userModel.findOne({ username });
   }
 
-  findByUsernameWithPassword(username: string) {
-    return this.findByUsername(username).select('+password');
+  findOneByUsernameWithPassword(username: string) {
+    return this.findOneByUsername(username).select('+password');
   }
 
   findByOrganization(organization) {
     return this.userModel.find({ organization });
+  }
+
+  findByIds(usersIds: string[]) {
+    return this.userModel.find({ _id: { $in: usersIds } });
   }
 
   async create(createUserDto: CreateUserInput) {

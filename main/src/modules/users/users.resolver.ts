@@ -19,6 +19,8 @@ import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { GetIdArgs } from '../../common/dto/getId.args';
 import { UserInUserOrganizationGuard } from './guards/user-in-user-organization.guard';
+import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
+import { InvitationsService } from '../invitations/invitations.service';
 
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver(User) {
@@ -26,6 +28,7 @@ export class UsersResolver extends BaseResolver(User) {
     private usersService: UsersService,
     private organizationsService: OrganizationsService,
     private projectsService: ProjectsService,
+    private invitationsService: InvitationsService,
   ) {
     super(usersService);
   }
@@ -48,7 +51,7 @@ export class UsersResolver extends BaseResolver(User) {
   }
 
   @ResolveField('organization', () => Organization, { nullable: true })
-  getorganization(@Parent() user: User) {
+  getOrganization(@Parent() user: User) {
     const { organization } = user;
     return this.organizationsService.findOne(organization);
   }
@@ -56,5 +59,12 @@ export class UsersResolver extends BaseResolver(User) {
   @ResolveField('projects', () => [Project], { nullable: true })
   getProjects(@Parent() user: User) {
     return this.projectsService.getProjectsByUser(user);
+  }
+
+  @ResolveField('invitations', () => [InvitationToOrganization], {
+    nullable: true,
+  })
+  getInvitations(@Parent() user: User) {
+    return this.invitationsService.getInvitationsForUser(user);
   }
 }

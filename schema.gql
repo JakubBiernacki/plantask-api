@@ -13,6 +13,13 @@ type Organization {
 """Date custom scalar type"""
 scalar Date
 
+type InvitationToOrganization {
+  id: ID!
+  created_at: Date!
+  user: User!
+  organization: Organization!
+}
+
 type User {
   id: ID!
   created_at: Date!
@@ -21,6 +28,7 @@ type User {
   accountType: AccountType!
   organization: Organization
   role: String!
+  invitations: [InvitationToOrganization!]
   projects: [Project!]
 }
 
@@ -96,6 +104,7 @@ type Mutation {
   refreshToken(refreshToken: String!): LoginResult!
   createOrganization(createOrganizationInput: CreateOrganizationInput!): Organization!
   updateOrganization(updateOrganizationInput: UpdateOrganizationInput!): Organization!
+  addUsersToOrganization(users: [String!]!): [InvitationToOrganization!]!
   removeOrganization(id: ID!): Organization!
 }
 

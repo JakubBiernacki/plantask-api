@@ -7,6 +7,7 @@ import { Role } from '../enums/role.enum';
 import { AccountType } from '../enums/accountType.enum';
 import { checkRoleMiddleware } from '../../auth/middlewares/checkRole.middleware';
 import { Organization } from '../../organizations/entities/organization.entity';
+import { InvitationToOrganization } from '../../invitations/entities/invitation-to-organization.entity';
 
 @Schema()
 @ObjectType()
@@ -37,6 +38,9 @@ export class User extends BaseEntity {
   @Field({ middleware: [checkRoleMiddleware] })
   @Extensions({ role: Role.Admin })
   role: Role;
+
+  @Field(() => [InvitationToOrganization], { nullable: true })
+  invitations?: InvitationToOrganization[];
 }
 
 export type UserDocument = User & Document;

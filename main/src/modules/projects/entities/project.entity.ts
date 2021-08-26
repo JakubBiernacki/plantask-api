@@ -15,7 +15,7 @@ export class Project extends BaseCreatorEntity {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'organization',
+    ref: 'Organization',
   })
   @Field(() => Organization, { nullable: true })
   organization?: Organization;

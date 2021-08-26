@@ -26,7 +26,9 @@ export class AuthService {
   ) {}
 
   async validateUser({ username, password }: LoginInput): Promise<any> {
-    const user = await this.usersService.findByUsernameWithPassword(username);
+    const user = await this.usersService.findOneByUsernameWithPassword(
+      username,
+    );
 
     if (user && (await this.comparePasswords(password, user.password))) {
       delete user['_doc'].password;

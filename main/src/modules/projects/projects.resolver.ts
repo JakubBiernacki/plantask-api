@@ -72,6 +72,11 @@ export class ProjectsResolver extends BaseResolver(Project) {
     );
 
     newContributors.forEach((user: User & any) => {
+      if (project.users.includes(user.id)) {
+        throw new BadRequestException(
+          `user ${user.username} is already a collaborator`,
+        );
+      }
       if (
         !user?.organization ||
         !user.organization.equals(project.organization)
@@ -82,9 +87,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
       }
     });
 
-    project.users = [...project.users, ...newContributors];
-
-    return project.save();
+    return this.projectsService.addContributors(id, newContributors);
   }
 
   @ACCOUNT_Types(AccountType.Normal, AccountType.Organizer)

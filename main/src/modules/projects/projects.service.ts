@@ -19,7 +19,7 @@ export class ProjectsService extends BaseService<Project> {
   async remove(id) {
     const project = await this.findOne(id);
     this.tasksService.findTasksByProject(project).deleteMany();
-    return project.remove();
+    return this.projectModel.remove(id);
   }
 
   getTasksByProjectId(project: Project) {
@@ -36,5 +36,11 @@ export class ProjectsService extends BaseService<Project> {
 
   getProjectsByOrganization(organization) {
     return this.projectModel.find({ organization });
+  }
+
+  addContributors(id, newContributors) {
+    return this.projectModel.findByIdAndUpdate(id, {
+      $addToSet: { users: newContributors },
+    });
   }
 }

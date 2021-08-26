@@ -8,6 +8,7 @@ import {
 } from './entities/organization.entity';
 import { UsersModule } from '../users/users.module';
 import { ProjectsModule } from '../projects/projects.module';
+import { InvitationsModule } from '../invitations/invitations.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ProjectsModule } from '../projects/projects.module';
     ]),
     forwardRef(() => UsersModule),
     forwardRef(() => ProjectsModule),
+    InvitationsModule,
   ],
   providers: [OrganizationsResolver, OrganizationsService],
   exports: [OrganizationsService],
