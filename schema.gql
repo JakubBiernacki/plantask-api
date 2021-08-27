@@ -27,7 +27,7 @@ type User {
   email: String!
   accountType: AccountType!
   organization: Organization
-  role: String!
+  role: Role!
   invitations: [InvitationToOrganization!]
   projects: [Project!]
 }
@@ -36,6 +36,11 @@ enum AccountType {
   Normal
   Employee
   Organizer
+}
+
+enum Role {
+  User
+  Admin
 }
 
 type Project {

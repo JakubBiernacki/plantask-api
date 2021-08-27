@@ -18,9 +18,9 @@ import { OrganizationsService } from '../organizations/organizations.service';
 import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { GetIdArgs } from '../../common/dto/getId.args';
-import { UserInUserOrganizationGuard } from './guards/user-in-user-organization.guard';
 import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
 import { InvitationsService } from '../invitations/invitations.service';
+import { userIsUserMiddleware } from '../auth/middlewares/user-is-user.middleware';
 
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver(User) {
@@ -39,7 +39,7 @@ export class UsersResolver extends BaseResolver(User) {
     return user;
   }
 
-  @UseGuards(GqlAuthGuard, UserInUserOrganizationGuard)
+  @UseGuards(GqlAuthGuard)
   @Query(() => User, { name: `findOneUser` })
   async findOne(@Args() args: GetIdArgs) {
     return super.findOne(args);
@@ -63,6 +63,7 @@ export class UsersResolver extends BaseResolver(User) {
 
   @ResolveField('invitations', () => [InvitationToOrganization], {
     nullable: true,
+    middleware: [userIsUserMiddleware],
   })
   getInvitations(@Parent() user: User) {
     return this.invitationsService.getInvitationsForUser(user);

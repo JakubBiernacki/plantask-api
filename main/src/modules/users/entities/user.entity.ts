@@ -35,11 +35,13 @@ export class User extends BaseEntity {
   organization?: Organization;
 
   @Prop({ enum: Role, default: Role.User })
-  @Field({ middleware: [checkRoleMiddleware] })
+  @Field(() => Role, { middleware: [checkRoleMiddleware] })
   @Extensions({ role: Role.Admin })
   role: Role;
 
-  @Field(() => [InvitationToOrganization], { nullable: true })
+  @Field(() => [InvitationToOrganization], {
+    nullable: true,
+  })
   invitations?: InvitationToOrganization[];
 }
 
