@@ -105,6 +105,8 @@ type Mutation {
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   removeProject(id: ID!): Project!
   createUser(createUserInput: CreateUserInput!): User!
+  acceptInvitationToOrganization(id: ID!): User!
+  leaveOrganization: User!
   login(loginInput: LoginInput!): LoginResult!
   refreshToken(refreshToken: String!): LoginResult!
   createOrganization(createOrganizationInput: CreateOrganizationInput!): Organization!

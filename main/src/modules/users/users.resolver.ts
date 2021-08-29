@@ -9,7 +9,11 @@ import {
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { GetUser } from '../auth/decorators/getUser.decorator';
-import { UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/jwt-gqlAuth.guard';
 import { CreateUserInput } from './dto/create-user.input';
 import { BaseResolver } from '../../common/base/base.resolver';
@@ -21,6 +25,10 @@ import { GetIdArgs } from '../../common/dto/getId.args';
 import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
 import { InvitationsService } from '../invitations/invitations.service';
 import { userIsUserMiddleware } from '../auth/middlewares/user-is-user.middleware';
+import { SetParentUserInterceptor } from './interceptors/set-parent-user.interceptor';
+import { AccountType } from './enums/accountType.enum';
+import { ACCOUNT_Types } from '../auth/decorators/accountType.decorator';
+import { AccountTypeGuard } from '../auth/guards/accountType.guard';
 
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver(User) {
@@ -34,12 +42,14 @@ export class UsersResolver extends BaseResolver(User) {
   }
 
   @UseGuards(GqlAuthGuard)
+  @UseInterceptors(SetParentUserInterceptor)
   @Query(() => User)
   me(@GetUser() user: User) {
     return user;
   }
 
   @UseGuards(GqlAuthGuard)
+  @UseInterceptors(SetParentUserInterceptor)
   @Query(() => User, { name: `findOneUser` })
   async findOne(@Args() args: GetIdArgs) {
     return super.findOne(args);
@@ -48,6 +58,35 @@ export class UsersResolver extends BaseResolver(User) {
   @Mutation(() => User)
   createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.usersService.create(createUserInput);
+  }
+
+  @ACCOUNT_Types(AccountType.Normal)
+  @UseGuards(GqlAuthGuard, AccountTypeGuard)
+  @Mutation(() => User)
+  async acceptInvitationToOrganization(
+    @GetUser() user,
+    @Args() { id }: GetIdArgs,
+  ) {
+    const invitation = await this.invitationsService.findOne(id);
+
+    if (!user.equals(invitation.user)) {
+      throw new BadRequestException('You do not have this invitation');
+    }
+
+    user.organization = invitation.organization;
+    user.accountType = AccountType.Employee;
+    user.save();
+    await this.invitationsService.remove(id);
+    return user;
+  }
+
+  @ACCOUNT_Types(AccountType.Employee)
+  @UseGuards(GqlAuthGuard, AccountTypeGuard)
+  @Mutation(() => User)
+  leaveOrganization(@GetUser() user) {
+    user.organization = null;
+    user.accountType = AccountType.Normal;
+    return user.save();
   }
 
   @ResolveField('organization', () => Organization, { nullable: true })

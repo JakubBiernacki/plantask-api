@@ -6,9 +6,10 @@ export const userIsUserMiddleware: FieldMiddleware | any = async (
   next: NextFn,
 ) => {
   const { info } = ctx;
-  const { user } = ctx.context.req;
+  const { user, parent } = ctx.context.req;
+
   const value = await next();
-  if (user.equals(value?.[0]?.user)) return value;
+  if (user.equals(parent)) return value;
   throw new ForbiddenException(
     `User does not have sufficient permissions to access "${info.fieldName}" field.`,
   );
