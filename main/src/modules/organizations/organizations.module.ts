@@ -9,6 +9,7 @@ import {
 import { UsersModule } from '../users/users.module';
 import { ProjectsModule } from '../projects/projects.module';
 import { InvitationsModule } from '../invitations/invitations.module';
+import { PubSubModule } from '../pubsub/pubsub.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { InvitationsModule } from '../invitations/invitations.module';
     forwardRef(() => UsersModule),
     forwardRef(() => ProjectsModule),
     InvitationsModule,
+    PubSubModule,
   ],
   providers: [OrganizationsResolver, OrganizationsService],
   exports: [OrganizationsService],

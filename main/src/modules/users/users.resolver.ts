@@ -5,12 +5,14 @@ import {
   Query,
   ResolveField,
   Resolver,
+  Subscription,
 } from '@nestjs/graphql';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { GetUser } from '../../common/decorators/getUser.decorator';
 import {
   BadRequestException,
+  Inject,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -29,6 +31,7 @@ import { SetParentUserInterceptor } from './interceptors/set-parent-user.interce
 import { AccountType } from './enums/accountType.enum';
 import { ACCOUNT_Types } from '../../common/decorators/accountType.decorator';
 import { AccountTypeGuard } from '../../common/guards/accountType.guard';
+import { PubSubEngine } from 'apollo-server-express';
 
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver(User) {
@@ -37,6 +40,9 @@ export class UsersResolver extends BaseResolver(User) {
     private organizationsService: OrganizationsService,
     private projectsService: ProjectsService,
     private invitationsService: InvitationsService,
+
+    @Inject('PUB_SUB')
+    private readonly pubSub: PubSubEngine,
   ) {
     super(usersService);
   }
@@ -106,5 +112,18 @@ export class UsersResolver extends BaseResolver(User) {
   })
   getInvitations(@Parent() user: User) {
     return this.invitationsService.getInvitationsForUser(user);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription(() => InvitationToOrganization, {
+    filter: (payload, variables) => {
+      console.log(payload, variables);
+      // return variables.user.equals(payload.user);
+      return true;
+    },
+    resolve: (value) => value,
+  })
+  async sendInvitationHandler(@GetUser() user) {
+    return this.pubSub.asyncIterator(`invitationToOrganization-${user.id}`);
   }
 }

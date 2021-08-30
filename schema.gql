@@ -157,3 +157,7 @@ input UpdateOrganizationInput {
   name: String
   id: String!
 }
+
+type Subscription {
+  sendInvitationHandler: InvitationToOrganization!
+}

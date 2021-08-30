@@ -13,7 +13,7 @@ import { CreateOrganizationInput } from './dto/create-organization.input';
 import { UpdateOrganizationInput } from './dto/update-organization.input';
 import { GetIdArgs } from '../../common/dto/getId.args';
 import { GetUser } from '../../common/decorators/getUser.decorator';
-import { BadRequestException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Inject, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
 import { AccountType } from '../users/enums/accountType.enum';
 import { User } from '../users/entities/user.entity';
@@ -24,6 +24,9 @@ import { OrganizationInOrganizationGuard } from '../../common/guards/in-organiza
 import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
+import { PubSubEngine } from 'apollo-server-express';
+
+// const pubSub = new PubSub();
 
 @Resolver(() => Organization)
 @UseGuards(GqlAuthGuard)
@@ -32,6 +35,9 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
     private organizationsService: OrganizationsService,
     private usersService: UsersService,
     private projectsService: ProjectsService,
+
+    @Inject('PUB_SUB')
+    private readonly pubSub: PubSubEngine,
   ) {
     super(organizationsService);
   }
@@ -85,10 +91,21 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
     usersIds: string[],
   ) {
     const users = await this.usersService.findByIds(usersIds);
-    return this.organizationsService.sendInvitationToUsers(
+    const invitations = await this.organizationsService.sendInvitationToUsers(
       user.organization,
       users,
     );
+
+    Promise.all(
+      invitations.map((invitation) =>
+        this.pubSub.publish(
+          `invitationToOrganization-${invitation.user.id}`,
+          invitation,
+        ),
+      ),
+    );
+
+    return invitations;
   }
 
   @ACCOUNT_Types(AccountType.Organizer)

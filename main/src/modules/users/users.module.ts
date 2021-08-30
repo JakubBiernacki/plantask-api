@@ -7,6 +7,7 @@ import { UsersResolver } from './users.resolver';
 import { OrganizationsModule } from '../organizations/organizations.module';
 import { ProjectsModule } from '../projects/projects.module';
 import { InvitationsModule } from '../invitations/invitations.module';
+import { PubSubModule } from '../pubsub/pubsub.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { InvitationsModule } from '../invitations/invitations.module';
     forwardRef(() => OrganizationsModule),
     forwardRef(() => ProjectsModule),
     InvitationsModule,
+    PubSubModule,
   ],
   providers: [UsersService, UsersResolver],
   exports: [UsersService],
