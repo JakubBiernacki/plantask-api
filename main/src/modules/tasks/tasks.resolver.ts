@@ -14,8 +14,8 @@ import { ProjectsService } from '../projects/projects.service';
 import { GetIdArgs } from '../../common/dto/getId.args';
 import { BaseResolver } from '../../common/base/base.resolver';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/jwt-gqlAuth.guard';
-import { GetUser } from '../auth/decorators/getUser.decorator';
+import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
+import { GetUser } from '../../common/decorators/getUser.decorator';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 

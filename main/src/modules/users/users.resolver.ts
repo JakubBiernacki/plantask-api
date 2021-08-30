@@ -8,13 +8,13 @@ import {
 } from '@nestjs/graphql';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
-import { GetUser } from '../auth/decorators/getUser.decorator';
+import { GetUser } from '../../common/decorators/getUser.decorator';
 import {
   BadRequestException,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/jwt-gqlAuth.guard';
+import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
 import { CreateUserInput } from './dto/create-user.input';
 import { BaseResolver } from '../../common/base/base.resolver';
 import { Organization } from '../organizations/entities/organization.entity';
@@ -24,11 +24,11 @@ import { ProjectsService } from '../projects/projects.service';
 import { GetIdArgs } from '../../common/dto/getId.args';
 import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
 import { InvitationsService } from '../invitations/invitations.service';
-import { userIsUserMiddleware } from '../auth/middlewares/user-is-user.middleware';
+import { userIsUserMiddleware } from '../../common/middlewares/user-is-user.middleware';
 import { SetParentUserInterceptor } from './interceptors/set-parent-user.interceptor';
 import { AccountType } from './enums/accountType.enum';
-import { ACCOUNT_Types } from '../auth/decorators/accountType.decorator';
-import { AccountTypeGuard } from '../auth/guards/accountType.guard';
+import { ACCOUNT_Types } from '../../common/decorators/accountType.decorator';
+import { AccountTypeGuard } from '../../common/guards/accountType.guard';
 
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver(User) {

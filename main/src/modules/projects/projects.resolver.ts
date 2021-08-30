@@ -15,16 +15,16 @@ import { PaginationArgs } from '../../common/dto/pagination.args';
 import { GetIdArgs } from '../../common/dto/getId.args';
 import { BaseResolver } from '../../common/base/base.resolver';
 import { BadRequestException, UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/jwt-gqlAuth.guard';
-import { GetUser } from '../auth/decorators/getUser.decorator';
+import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
+import { GetUser } from '../../common/decorators/getUser.decorator';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { ACCOUNT_Types } from '../auth/decorators/accountType.decorator';
+import { ACCOUNT_Types } from '../../common/decorators/accountType.decorator';
 import { AccountType } from '../users/enums/accountType.enum';
-import { AccountTypeGuard } from '../auth/guards/accountType.guard';
+import { AccountTypeGuard } from '../../common/guards/accountType.guard';
 import { Organization } from '../organizations/entities/organization.entity';
 import { OrganizationsService } from '../organizations/organizations.service';
-import { UserInProjectOrganizationGuard } from './guards/user-in-project-organization.guard';
+import { ProjectInOrganizationGuard } from '../../common/guards/in-organization/project-in-organization.guard';
 
 @Resolver(() => Project)
 @UseGuards(GqlAuthGuard)
@@ -37,7 +37,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
     super(projectsService);
   }
 
-  @UseGuards(UserInProjectOrganizationGuard)
+  @UseGuards(ProjectInOrganizationGuard)
   @Query(() => Project, { name: `findOne${Project.name}` })
   async findOne(@Args() args: GetIdArgs) {
     return super.findOne(args);
@@ -58,7 +58,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
   }
 
   @ACCOUNT_Types(AccountType.Organizer)
-  @UseGuards(UserInProjectOrganizationGuard, AccountTypeGuard)
+  @UseGuards(ProjectInOrganizationGuard, AccountTypeGuard)
   @Mutation(() => Project)
   async addProjectContributors(
     @Args() { id }: GetIdArgs,
@@ -91,7 +91,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
   }
 
   @ACCOUNT_Types(AccountType.Normal, AccountType.Organizer)
-  @UseGuards(UserInProjectOrganizationGuard, AccountTypeGuard)
+  @UseGuards(ProjectInOrganizationGuard, AccountTypeGuard)
   @Mutation(() => Project)
   updateProject(
     @Args('updateProjectInput') updateProjectInput: UpdateProjectInput,
@@ -103,7 +103,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
   }
 
   @ACCOUNT_Types(AccountType.Normal, AccountType.Organizer)
-  @UseGuards(UserInProjectOrganizationGuard, AccountTypeGuard)
+  @UseGuards(ProjectInOrganizationGuard, AccountTypeGuard)
   @Mutation(() => Project)
   removeProject(@Args() { id }: GetIdArgs) {
     return this.projectsService.remove(id);

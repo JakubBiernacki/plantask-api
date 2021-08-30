@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { AccountType } from '../../users/enums/accountType.enum';
+import { AccountType } from '../../modules/users/enums/accountType.enum';
 
 export const ACCOUNT_Type_KEY = 'accountType';
 export const ACCOUNT_Types = (...accountTypes: AccountType[]) =>

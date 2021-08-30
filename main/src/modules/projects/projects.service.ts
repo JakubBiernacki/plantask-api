@@ -39,8 +39,12 @@ export class ProjectsService extends BaseService<Project> {
   }
 
   addContributors(id, newContributors) {
-    return this.projectModel.findByIdAndUpdate(id, {
-      $addToSet: { users: newContributors },
-    });
+    return this.projectModel.findByIdAndUpdate(
+      id,
+      {
+        $addToSet: { users: newContributors },
+      },
+      { new: true },
+    );
   }
 }

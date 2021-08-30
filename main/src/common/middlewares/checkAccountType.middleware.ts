@@ -1,9 +1,9 @@
 import { FieldMiddleware, MiddlewareContext, NextFn } from '@nestjs/graphql';
-import { checkMiddleware } from '../../../common/middlewares/check.middleware';
+import { checkMiddleware } from '../base/check.middleware';
 
-const FIELD = 'role';
+const FIELD = 'accountType';
 
-export const checkRoleMiddleware: FieldMiddleware = async (
+export const checkAccountTypeMiddleware: FieldMiddleware = async (
   ctx: MiddlewareContext,
   next: NextFn,
 ) => checkMiddleware(ctx, next, FIELD);

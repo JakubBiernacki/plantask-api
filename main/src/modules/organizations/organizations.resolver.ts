@@ -12,15 +12,15 @@ import { BaseResolver } from '../../common/base/base.resolver';
 import { CreateOrganizationInput } from './dto/create-organization.input';
 import { UpdateOrganizationInput } from './dto/update-organization.input';
 import { GetIdArgs } from '../../common/dto/getId.args';
-import { GetUser } from '../auth/decorators/getUser.decorator';
+import { GetUser } from '../../common/decorators/getUser.decorator';
 import { BadRequestException, UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/jwt-gqlAuth.guard';
+import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
 import { AccountType } from '../users/enums/accountType.enum';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { ACCOUNT_Types } from '../auth/decorators/accountType.decorator';
-import { AccountTypeGuard } from '../auth/guards/accountType.guard';
-import { UserInOrganizationGuard } from './guards/user-in-organization.guard';
+import { ACCOUNT_Types } from '../../common/decorators/accountType.decorator';
+import { AccountTypeGuard } from '../../common/guards/accountType.guard';
+import { OrganizationInOrganizationGuard } from '../../common/guards/in-organization/organization-in-organization.guard';
 import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
@@ -57,14 +57,14 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
     return organization;
   }
 
-  @UseGuards(UserInOrganizationGuard)
+  @UseGuards(OrganizationInOrganizationGuard)
   @Query(() => Organization, { name: `findOne${Organization.name}` })
   async findOne(@Args() args: GetIdArgs) {
     return super.findOne(args);
   }
 
   @ACCOUNT_Types(AccountType.Organizer)
-  @UseGuards(UserInOrganizationGuard, AccountTypeGuard)
+  @UseGuards(OrganizationInOrganizationGuard, AccountTypeGuard)
   @Mutation(() => Organization)
   updateOrganization(
     @Args('updateOrganizationInput')
@@ -92,7 +92,7 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
   }
 
   @ACCOUNT_Types(AccountType.Organizer)
-  @UseGuards(UserInOrganizationGuard, AccountTypeGuard)
+  @UseGuards(OrganizationInOrganizationGuard, AccountTypeGuard)
   @Mutation(() => Organization)
   async removeOrganization(@Args() { id }: GetIdArgs) {
     await this.usersService
