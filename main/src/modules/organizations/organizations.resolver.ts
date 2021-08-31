@@ -26,18 +26,16 @@ import { ProjectsService } from '../projects/projects.service';
 import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
 import { PubSubEngine } from 'apollo-server-express';
 
-// const pubSub = new PubSub();
-
 @Resolver(() => Organization)
 @UseGuards(GqlAuthGuard)
 export class OrganizationsResolver extends BaseResolver(Organization) {
   constructor(
+    @Inject('PUB_SUB')
+    private readonly pubSub: PubSubEngine,
+
     private organizationsService: OrganizationsService,
     private usersService: UsersService,
     private projectsService: ProjectsService,
-
-    @Inject('PUB_SUB')
-    private readonly pubSub: PubSubEngine,
   ) {
     super(organizationsService);
   }

@@ -16,13 +16,14 @@ const saltOrRounds = 12;
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(forwardRef(() => UsersService))
-    private usersService: UsersService,
-    private jwtService: JwtService,
-    private configService: ConfigService,
-
     @InjectModel(Token.name)
     private tokenModel: Model<TokenDocument>,
+
+    @Inject(forwardRef(() => UsersService))
+    private usersService: UsersService,
+
+    private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async validateUser({ username, password }: LoginInput): Promise<any> {

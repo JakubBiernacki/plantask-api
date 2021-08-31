@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  forwardRef,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './entities/user.entity';
@@ -14,8 +9,9 @@ import { BaseService } from '../../common/base/base.service';
 @Injectable()
 export class UsersService extends BaseService<User> {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-    @Inject(forwardRef(() => AuthService))
+    @InjectModel(User.name)
+    private userModel: Model<UserDocument>,
+
     private authService: AuthService,
   ) {
     super(userModel);
@@ -35,6 +31,11 @@ export class UsersService extends BaseService<User> {
 
   findByIds(usersIds: string[]) {
     return this.userModel.find({ _id: { $in: usersIds } });
+  }
+
+  async getOrganizationByUser(user: User) {
+    return (await this.userModel.findOne(user).populate('organization'))
+      .organization;
   }
 
   async create(createUserDto: CreateUserInput) {

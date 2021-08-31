@@ -8,7 +8,10 @@ import { BaseService } from '../../common/base/base.service';
 
 @Injectable()
 export class TasksService extends BaseService<Task> {
-  constructor(@InjectModel(Task.name) private taskModel: Model<TaskDocument>) {
+  constructor(
+    @InjectModel(Task.name)
+    private taskModel: Model<TaskDocument>,
+  ) {
     super(taskModel);
   }
 
@@ -18,5 +21,14 @@ export class TasksService extends BaseService<Task> {
 
   findTasksByProject(project: Project) {
     return this.taskModel.find({ project });
+  }
+
+  async getCreatorByTask(task: Task) {
+    return (await this.taskModel.findOne(task).populate('created_by'))
+      .created_by;
+  }
+
+  async getProjectByTask(task: Task) {
+    return (await this.taskModel.findOne(task).populate('project')).project;
   }
 }

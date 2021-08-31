@@ -23,7 +23,6 @@ import { ACCOUNT_Types } from '../../common/decorators/accountType.decorator';
 import { AccountType } from '../users/enums/accountType.enum';
 import { AccountTypeGuard } from '../../common/guards/accountType.guard';
 import { Organization } from '../organizations/entities/organization.entity';
-import { OrganizationsService } from '../organizations/organizations.service';
 import { ProjectInOrganizationGuard } from '../../common/guards/in-organization/project-in-organization.guard';
 
 @Resolver(() => Project)
@@ -32,7 +31,6 @@ export class ProjectsResolver extends BaseResolver(Project) {
   constructor(
     private projectsService: ProjectsService,
     private usersService: UsersService,
-    private organizationsService: OrganizationsService,
   ) {
     super(projectsService);
   }
@@ -118,20 +116,18 @@ export class ProjectsResolver extends BaseResolver(Project) {
       .skip(offset);
   }
 
-  @ResolveField('creator', () => User)
+  @ResolveField('created_by', () => User)
   getCreator(@Parent() project: Project) {
-    const { created_by } = project;
-    return this.usersService.findOne(created_by);
+    return this.projectsService.getCreatorByProject(project);
   }
 
   @ResolveField('organization', () => Organization, { nullable: true })
   getOrganization(@Parent() project: Project) {
-    const { organization } = project;
-    return this.organizationsService.findOne(organization);
+    return this.projectsService.getOrganizationByProject(project);
   }
 
   @ResolveField('users', () => [User])
   getUsers(@Parent() project: Project) {
-    return this.projectsService.getUsersByProjectId(project);
+    return this.projectsService.getUsersByProject(project);
   }
 }

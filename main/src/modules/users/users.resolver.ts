@@ -20,7 +20,6 @@ import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
 import { CreateUserInput } from './dto/create-user.input';
 import { BaseResolver } from '../../common/base/base.resolver';
 import { Organization } from '../organizations/entities/organization.entity';
-import { OrganizationsService } from '../organizations/organizations.service';
 import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { GetIdArgs } from '../../common/dto/getId.args';
@@ -36,13 +35,12 @@ import { PubSubEngine } from 'apollo-server-express';
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver(User) {
   constructor(
-    private usersService: UsersService,
-    private organizationsService: OrganizationsService,
-    private projectsService: ProjectsService,
-    private invitationsService: InvitationsService,
-
     @Inject('PUB_SUB')
     private readonly pubSub: PubSubEngine,
+
+    private usersService: UsersService,
+    private projectsService: ProjectsService,
+    private invitationsService: InvitationsService,
   ) {
     super(usersService);
   }
@@ -97,8 +95,7 @@ export class UsersResolver extends BaseResolver(User) {
 
   @ResolveField('organization', () => Organization, { nullable: true })
   getOrganization(@Parent() user: User) {
-    const { organization } = user;
-    return this.organizationsService.findOne(organization);
+    return this.usersService.getOrganizationByUser(user);
   }
 
   @ResolveField('projects', () => [Project], { nullable: true })

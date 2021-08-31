@@ -51,7 +51,6 @@ type Project {
   organization: Organization
   users: [User!]!
   tasks(offset: Int = 0, limit: Int = 10): [Task!]!
-  creator: User!
 }
 
 type Task {
@@ -62,7 +61,6 @@ type Task {
   level: TaskLevel!
   description: String!
   project: Project
-  creator: User!
 }
 
 enum TaskType {
@@ -109,6 +107,7 @@ type Mutation {
   leaveOrganization: User!
   login(loginInput: LoginInput!): LoginResult!
   refreshToken(refreshToken: String!): LoginResult!
+  removeInvitation(id: ID!): InvitationToOrganization!
   createOrganization(createOrganizationInput: CreateOrganizationInput!): Organization!
   updateOrganization(updateOrganizationInput: UpdateOrganizationInput!): Organization!
   addUsersToOrganization(users: [String!]!): [InvitationToOrganization!]!

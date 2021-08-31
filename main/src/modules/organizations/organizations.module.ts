@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationsResolver } from './organizations.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -16,8 +16,8 @@ import { PubSubModule } from '../pubsub/pubsub.module';
     MongooseModule.forFeature([
       { name: Organization.name, schema: OrganizationSchema },
     ]),
-    forwardRef(() => UsersModule),
-    forwardRef(() => ProjectsModule),
+    UsersModule,
+    ProjectsModule,
     InvitationsModule,
     PubSubModule,
   ],

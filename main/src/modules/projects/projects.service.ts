@@ -11,6 +11,7 @@ export class ProjectsService extends BaseService<Project> {
   constructor(
     @InjectModel(Project.name)
     private projectModel: Model<ProjectDocument>,
+
     private tasksService: TasksService,
   ) {
     super(projectModel);
@@ -26,8 +27,17 @@ export class ProjectsService extends BaseService<Project> {
     return this.tasksService.findTasksByProject(project);
   }
 
-  async getUsersByProjectId(project: Project) {
+  async getUsersByProject(project: Project) {
     return (await this.projectModel.findOne(project).populate('users')).users;
+  }
+  async getOrganizationByProject(project: Project) {
+    return (await this.projectModel.findOne(project).populate('organization'))
+      .organization;
+  }
+
+  async getCreatorByProject(project: Project) {
+    return (await this.projectModel.findOne(project).populate('created_by'))
+      .created_by;
   }
 
   getProjectsByUser(user) {

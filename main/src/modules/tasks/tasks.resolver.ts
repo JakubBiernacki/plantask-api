@@ -16,7 +16,6 @@ import { BaseResolver } from '../../common/base/base.resolver';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
 import { GetUser } from '../../common/decorators/getUser.decorator';
-import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 
 @Resolver(() => Task)
@@ -25,9 +24,8 @@ export class TasksResolver extends BaseResolver(Task) {
   constructor(
     private tasksService: TasksService,
     private projectsService: ProjectsService,
-    private usersService: UsersService,
   ) {
-    super(tasksService, usersService);
+    super(tasksService);
   }
 
   @Mutation(() => Task)
@@ -53,13 +51,11 @@ export class TasksResolver extends BaseResolver(Task) {
 
   @ResolveField('project', () => Project, { nullable: true })
   getProject(@Parent() task: Task) {
-    const { project } = task;
-    return this.projectsService.findOne(project);
+    return this.tasksService.getProjectByTask(task);
   }
 
-  @ResolveField('creator', () => User)
+  @ResolveField('created_by', () => User)
   getCreator(@Parent() task: Task) {
-    const { created_by } = task;
-    return this.usersService.findOne(created_by);
+    return this.tasksService.getCreatorByTask(task);
   }
 }
