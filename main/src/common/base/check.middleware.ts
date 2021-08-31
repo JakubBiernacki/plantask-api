@@ -12,7 +12,6 @@ export const checkMiddleware: FieldMiddleware | any = async (
 
   const requiredMetadata = ctx.context.req.user[field];
   if (requiredMetadata !== extensions[field]) {
-    // or just "return null" to ignore
     throw new ForbiddenException(
       `${info.fieldName}: ${ErrorsMessages.NOT_PERMISSION}`,
     );

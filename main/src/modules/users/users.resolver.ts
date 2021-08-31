@@ -31,13 +31,13 @@ import { AccountType } from './enums/accountType.enum';
 import { ACCOUNT_Types } from '../../common/decorators/account-type.decorator';
 import { AccountTypeGuard } from '../../common/guards/account-type.guard';
 import { PubSubEngine } from 'apollo-server-express';
-import { ErrorsMessages, Providers } from '../../constants';
+import { ErrorsMessages, Providers, PubSubPublish } from '../../constants';
 
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver(User) {
   constructor(
     @Inject(Providers.PUB_SUB)
-    private readonly pubSub: PubSubEngine,
+    private pubSub: PubSubEngine,
 
     private usersService: UsersService,
     private projectsService: ProjectsService,
@@ -74,7 +74,7 @@ export class UsersResolver extends BaseResolver(User) {
   ) {
     const invitation = await this.invitationsService.findOne(id);
 
-    if (!invitation || !user.equals(invitation.user)) {
+    if (!user.equals(invitation.user)) {
       throw new NotFoundException(ErrorsMessages.NO_INVITATION);
     }
 
@@ -114,14 +114,11 @@ export class UsersResolver extends BaseResolver(User) {
 
   @UseGuards(GqlAuthGuard)
   @Subscription(() => InvitationToOrganization, {
-    filter: (payload, variables) => {
-      console.log(payload, variables);
-      // return variables.user.equals(payload.user);
-      return true;
-    },
+    filter: (payload, variables, context) =>
+      context.req.user.equals(payload.user),
     resolve: (value) => value,
   })
-  async sendInvitationHandler(@CurrentUser() user) {
-    return this.pubSub.asyncIterator(`invitationToOrganization-${user.id}`);
+  async InvitationHandler() {
+    return this.pubSub.asyncIterator(PubSubPublish.INVITATION);
   }
 }

@@ -158,5 +158,5 @@ input UpdateOrganizationInput {
 }
 
 type Subscription {
-  sendInvitationHandler: InvitationToOrganization!
+  InvitationHandler: InvitationToOrganization!
 }

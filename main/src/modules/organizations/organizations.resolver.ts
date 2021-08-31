@@ -25,14 +25,14 @@ import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
 import { PubSubEngine } from 'apollo-server-express';
-import { Providers } from '../../constants';
+import { ErrorsMessages, Providers, PubSubPublish } from '../../constants';
 
 @Resolver(() => Organization)
 @UseGuards(GqlAuthGuard)
 export class OrganizationsResolver extends BaseResolver(Organization) {
   constructor(
     @Inject(Providers.PUB_SUB)
-    private readonly pubSub: PubSubEngine,
+    private pubSub: PubSubEngine,
 
     private organizationsService: OrganizationsService,
     private usersService: UsersService,
@@ -51,7 +51,7 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
   ) {
     if (user.organization)
       throw new BadRequestException(
-        `user ${user.username} already has organization`,
+        `${user.username}: ${ErrorsMessages.HAS_ORGANIZATION}`,
       );
 
     const organization = await this.organizationsService.create(
@@ -97,10 +97,7 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
 
     Promise.all(
       invitations.map((invitation) =>
-        this.pubSub.publish(
-          `invitationToOrganization-${invitation.user.id}`,
-          invitation,
-        ),
+        this.pubSub.publish(PubSubPublish.INVITATION, invitation),
       ),
     );
 
