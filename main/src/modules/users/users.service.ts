@@ -5,6 +5,7 @@ import { User, UserDocument } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { BaseService } from '../../common/base/base.service';
+import { ErrorsMessages } from '../../constants';
 
 @Injectable()
 export class UsersService extends BaseService<User> {
@@ -59,8 +60,8 @@ export class UsersService extends BaseService<User> {
     if (usernameExist || emailExist) {
       throw new ConflictException({
         exist: {
-          username: usernameExist,
-          email: emailExist,
+          username: usernameExist && ErrorsMessages.USERNAME_EXIST,
+          email: emailExist && ErrorsMessages.EMAIL_EXIT,
         },
         error: 'Conflict',
       });

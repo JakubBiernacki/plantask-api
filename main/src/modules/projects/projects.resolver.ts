@@ -16,12 +16,12 @@ import { GetIdArgs } from '../../common/dto/getId.args';
 import { BaseResolver } from '../../common/base/base.resolver';
 import { BadRequestException, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
-import { GetUser } from '../../common/decorators/getUser.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { ACCOUNT_Types } from '../../common/decorators/accountType.decorator';
+import { ACCOUNT_Types } from '../../common/decorators/account-type.decorator';
 import { AccountType } from '../users/enums/accountType.enum';
-import { AccountTypeGuard } from '../../common/guards/accountType.guard';
+import { AccountTypeGuard } from '../../common/guards/account-type.guard';
 import { Organization } from '../organizations/entities/organization.entity';
 import { ProjectInOrganizationGuard } from '../../common/guards/in-organization/project-in-organization.guard';
 
@@ -45,7 +45,7 @@ export class ProjectsResolver extends BaseResolver(Project) {
   @UseGuards(AccountTypeGuard)
   @Mutation(() => Project)
   async createProject(
-    @GetUser() user,
+    @CurrentUser() user,
     @Args('createProjectInput') createProjectInput: CreateProjectInput,
   ) {
     createProjectInput.created_by = user;

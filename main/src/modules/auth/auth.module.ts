@@ -15,6 +15,7 @@ import { Token, TokenSchema } from './entities/token.entity';
 @Module({
   imports: [
     ConfigModule,
+    // UsersModule,
     forwardRef(() => UsersModule),
     PassportModule,
     ConfigModule.forFeature(JwtConfig),

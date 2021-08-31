@@ -5,6 +5,7 @@ import { AuthenticationError } from 'apollo-server-express';
 import { LoginResult } from './entities/login-result.entity';
 import * as dayjs from 'dayjs';
 import { ForbiddenException } from '@nestjs/common';
+import { ErrorsMessages } from '../../constants';
 
 @Resolver()
 export class AuthResolver {
@@ -15,9 +16,7 @@ export class AuthResolver {
     const result = await this.authService.validateUser(loginInput);
 
     if (result) return result;
-    throw new AuthenticationError(
-      'Could not log-in with the provided credentials',
-    );
+    throw new AuthenticationError(ErrorsMessages.LOGIN_ERROR);
   }
 
   @Mutation(() => LoginResult)

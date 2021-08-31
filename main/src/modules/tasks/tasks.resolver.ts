@@ -15,7 +15,7 @@ import { GetIdArgs } from '../../common/dto/getId.args';
 import { BaseResolver } from '../../common/base/base.resolver';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
-import { GetUser } from '../../common/decorators/getUser.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { User } from '../users/entities/user.entity';
 
 @Resolver(() => Task)
@@ -30,7 +30,7 @@ export class TasksResolver extends BaseResolver(Task) {
 
   @Mutation(() => Task)
   async createTask(
-    @GetUser() user,
+    @CurrentUser() user,
     @Args('createTaskInput') createTaskInput: CreateTaskInput,
   ) {
     const { projectId } = createTaskInput;

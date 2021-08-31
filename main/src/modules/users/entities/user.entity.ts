@@ -5,7 +5,7 @@ import { Document } from 'mongoose';
 import { BaseEntity } from '../../../common/base/entities/base.entitie';
 import { Role } from '../enums/role.enum';
 import { AccountType } from '../enums/accountType.enum';
-import { checkRoleMiddleware } from '../../../common/middlewares/checkRole.middleware';
+import { checkRoleMiddleware } from '../../../common/middlewares/check-role.middleware';
 import { Organization } from '../../organizations/entities/organization.entity';
 import { InvitationToOrganization } from '../../invitations/entities/invitation-to-organization.entity';
 

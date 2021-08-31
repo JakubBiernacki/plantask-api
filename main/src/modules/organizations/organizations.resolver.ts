@@ -12,25 +12,26 @@ import { BaseResolver } from '../../common/base/base.resolver';
 import { CreateOrganizationInput } from './dto/create-organization.input';
 import { UpdateOrganizationInput } from './dto/update-organization.input';
 import { GetIdArgs } from '../../common/dto/getId.args';
-import { GetUser } from '../../common/decorators/getUser.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { BadRequestException, Inject, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../../common/guards/jwt-gqlAuth.guard';
 import { AccountType } from '../users/enums/accountType.enum';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { ACCOUNT_Types } from '../../common/decorators/accountType.decorator';
-import { AccountTypeGuard } from '../../common/guards/accountType.guard';
+import { ACCOUNT_Types } from '../../common/decorators/account-type.decorator';
+import { AccountTypeGuard } from '../../common/guards/account-type.guard';
 import { OrganizationInOrganizationGuard } from '../../common/guards/in-organization/organization-in-organization.guard';
 import { Project } from '../projects/entities/project.entity';
 import { ProjectsService } from '../projects/projects.service';
 import { InvitationToOrganization } from '../invitations/entities/invitation-to-organization.entity';
 import { PubSubEngine } from 'apollo-server-express';
+import { Providers } from '../../constants';
 
 @Resolver(() => Organization)
 @UseGuards(GqlAuthGuard)
 export class OrganizationsResolver extends BaseResolver(Organization) {
   constructor(
-    @Inject('PUB_SUB')
+    @Inject(Providers.PUB_SUB)
     private readonly pubSub: PubSubEngine,
 
     private organizationsService: OrganizationsService,
@@ -44,7 +45,7 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
   @UseGuards(AccountTypeGuard)
   @Mutation(() => Organization)
   async createOrganization(
-    @GetUser() user,
+    @CurrentUser() user,
     @Args('createOrganizationInput')
     createOrganizationInput: CreateOrganizationInput,
   ) {
@@ -84,7 +85,7 @@ export class OrganizationsResolver extends BaseResolver(Organization) {
   @UseGuards(AccountTypeGuard)
   @Mutation(() => [InvitationToOrganization])
   async addUsersToOrganization(
-    @GetUser() user: User,
+    @CurrentUser() user: User,
     @Args({ name: 'users', type: () => [String] })
     usersIds: string[],
   ) {

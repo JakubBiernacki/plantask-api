@@ -11,7 +11,7 @@ import { PubSubModule } from '../pubsub/pubsub.module';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    forwardRef(() => AuthModule),
+    AuthModule,
     forwardRef(() => ProjectsModule),
     InvitationsModule,
     PubSubModule,

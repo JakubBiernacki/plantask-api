@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AccountType } from '../../modules/users/enums/accountType.enum';
-import { ACCOUNT_Type_KEY } from '../decorators/accountType.decorator';
+import { ACCOUNT_Type_KEY } from '../decorators/account-type.decorator';
 
 @Injectable()
 export class AccountTypeGuard implements CanActivate {
